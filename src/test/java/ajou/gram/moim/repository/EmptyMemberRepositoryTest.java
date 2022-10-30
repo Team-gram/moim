@@ -1,20 +1,20 @@
 package ajou.gram.moim.repository;
 
-import ajou.gram.moim.domain.EmptyClass;
+import ajou.gram.moim.domain.Member;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class EmptyMemberRepositoryTest {
 
-    MemberRepository repository = new EmptyMemberRepository();
+    MemberInterface repository = new MemberRepository();
 
     @Test
     public void save() {
-        EmptyClass member = new EmptyClass();
+        Member member = new Member();
         member.setName("spring");
 
         repository.save(member);
-        EmptyClass result = repository.findById(member.getId()).get();
+        Member result = repository.findById(member.getId()).get();
         Assertions.assertEquals(member, result);
     }
 }

@@ -1,6 +1,6 @@
 package ajou.gram.moim.domain;
 
-public class EmptyClass {
+public class Member {
 
     private String name;
     private long id;
