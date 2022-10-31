@@ -1,0 +1,16 @@
+INSERT INTO MoimPublic.TblUser (_id, 
+								_name, 
+                                _email, 
+                                _password, 
+                                _phone, 
+                                _address, 
+                                _gender, 
+                                _birthday, 
+                                _detail, 
+                                _isPublish, 
+                                _registerDate, 
+                                _lastLoginDate, 
+                                _retireDate, 
+                                _level) 
+						VALUES (1234567890,
+								'관리자');

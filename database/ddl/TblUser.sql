@@ -1,0 +1,17 @@
+CREATE TABLE `MoimPublic`.`TblUser` (
+  `_id` BIGINT(10) NOT NULL,
+  `_name` CHAR(50) NOT NULL,
+  `_email` CHAR(50) NOT NULL,
+  `_password` VARCHAR(300) NOT NULL,
+  `_phone` CHAR(11) NOT NULL,
+  `_address` NVARCHAR(200) NOT NULL,
+  `_gender` TINYINT(1) NOT NULL,
+  `_birthday` DATE NOT NULL,
+  `_detail` NVARCHAR(200) NULL,
+  `_isPublish` TINYINT(1) NOT NULL,
+  `_registerDate` DATETIME NOT NULL,
+  `_lastLoginDate` DATETIME NULL,
+  `_retireDate` DATETIME NULL,
+  `_level` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`_id`),
+  UNIQUE INDEX `_email_UNIQUE` (`_email` ASC) VISIBLE);

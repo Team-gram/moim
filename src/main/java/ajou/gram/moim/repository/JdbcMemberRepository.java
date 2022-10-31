@@ -49,7 +49,6 @@ public class JdbcMemberRepository implements MemberInterface {
             rs = pstmt.executeQuery();
             List<Member> members = new ArrayList<>();
             while(rs.next()) {
-                System.out.println(rs.getInt("id"));
                 Member member = new Member();
                 member.setId(rs.getInt("id"));
                 members.add(member);

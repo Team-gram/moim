@@ -24,10 +24,6 @@ public class MemberController {
     @ResponseBody
     public List<Member> getAllMember() {
         List<Member> members = memberService.findMembers();
-        System.out.println(members.size());
-        for (Member m : members) {
-            System.out.println(m.getId());
-        }
         return members;
     }
 }
