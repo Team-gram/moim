@@ -1,8 +1,29 @@
 package ajou.gram.moim.controller;
 
-import org.springframework.stereotype.Controller;
+import ajou.gram.moim.enumeration.EnumContract;
+import ajou.gram.moim.enumeration.EnumMapper;
+import ajou.gram.moim.enumeration.EnumValue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
 public class MainController {
 
+    private final EnumMapper enumMapper;
+
+    @Autowired
+    public MainController(EnumMapper enumMapper) {
+        this.enumMapper = enumMapper;
+    }
+    @GetMapping("/enum")
+    public Map<String, List<EnumValue>> getEnum() {
+        Map<String, List<EnumValue>> enumValues = new LinkedHashMap<>();
+        enumValues.put("joinStatus", enumMapper.toEnumValues(EnumContract.JoinStatus.class));
+        return enumValues;
+    }
 }
