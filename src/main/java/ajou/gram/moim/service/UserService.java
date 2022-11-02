@@ -1,4 +1,4 @@
-package ajou.gram.moim.Service;
+package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.User;
 import ajou.gram.moim.repository.UserRepository;

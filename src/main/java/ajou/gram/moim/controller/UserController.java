@@ -1,6 +1,6 @@
 package ajou.gram.moim.controller;
 
-import ajou.gram.moim.Service.UserService;
+import ajou.gram.moim.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
