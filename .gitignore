@@ -38,4 +38,4 @@ out/
 
 ### frontend ###
 /moim-frontend
-!**/src/main/resources/static/
+/src/main/resources/static/
