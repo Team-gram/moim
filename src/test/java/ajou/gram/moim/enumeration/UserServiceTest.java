@@ -1,6 +1,6 @@
 package ajou.gram.moim.enumeration;
 
-import ajou.gram.moim.Service.UserService;
+import ajou.gram.moim.service.UserService;
 import ajou.gram.moim.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

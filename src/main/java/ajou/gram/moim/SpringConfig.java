@@ -1,5 +1,6 @@
 package ajou.gram.moim;
 
+import ajou.gram.moim.aop.QuantitativeKPI;
 import ajou.gram.moim.enumeration.EnumContract;
 import ajou.gram.moim.enumeration.EnumMapper;
 import org.springframework.context.annotation.Bean;
@@ -13,5 +14,10 @@ public class SpringConfig {
         EnumMapper enumMapper = new EnumMapper();
         enumMapper.put("joinStatus", EnumContract.JoinStatus.class);
         return enumMapper;
+    }
+
+    @Bean
+    public QuantitativeKPI quantitativeKPI() {
+        return new QuantitativeKPI();
     }
 }
