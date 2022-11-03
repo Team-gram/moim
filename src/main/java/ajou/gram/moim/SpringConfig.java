@@ -1,8 +1,8 @@
 package ajou.gram.moim;
 
-import ajou.gram.moim.aop.QuantitativeKPI;
-import ajou.gram.moim.enumeration.EnumContract;
-import ajou.gram.moim.enumeration.EnumMapper;
+import ajou.gram.moim.util.aop.QuantitativeKPI;
+import ajou.gram.moim.util.enumeration.EnumContract;
+import ajou.gram.moim.util.enumeration.EnumMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

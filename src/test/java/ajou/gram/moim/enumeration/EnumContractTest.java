@@ -1,7 +1,10 @@
 package ajou.gram.moim.enumeration;
 
+import ajou.gram.moim.util.enumeration.EnumContract;
+import ajou.gram.moim.util.enumeration.EnumMapper;
+import ajou.gram.moim.util.enumeration.EnumValue;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

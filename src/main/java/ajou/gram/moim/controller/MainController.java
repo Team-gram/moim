@@ -1,8 +1,8 @@
 package ajou.gram.moim.controller;
 
-import ajou.gram.moim.enumeration.EnumContract;
-import ajou.gram.moim.enumeration.EnumMapper;
-import ajou.gram.moim.enumeration.EnumValue;
+import ajou.gram.moim.util.enumeration.EnumContract;
+import ajou.gram.moim.util.enumeration.EnumMapper;
+import ajou.gram.moim.util.enumeration.EnumValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

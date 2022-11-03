@@ -1,4 +1,4 @@
-package ajou.gram.moim.aop;
+package ajou.gram.moim.util.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

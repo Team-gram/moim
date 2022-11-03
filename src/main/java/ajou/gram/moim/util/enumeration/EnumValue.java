@@ -1,8 +1,4 @@
-package ajou.gram.moim.enumeration;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+package ajou.gram.moim.util.enumeration;
 
 public class EnumValue {
     private String key;
