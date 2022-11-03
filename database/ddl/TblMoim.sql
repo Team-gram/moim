@@ -1,0 +1,12 @@
+CREATE TABLE `MoimPublic`.`TblMoim` (
+  `_id` BIGINT(10) NOT NULL,
+  `_userId` VARCHAR(20) NOT NULL,
+  `_title` VARCHAR(100) NOT NULL,
+  `_category` CHAR(20) NOT NULL,
+  `_address` VARCHAR(200) NOT NULL,
+  `_isPublish` TINYINT(1) NOT NULL,
+  `_isFreeEnter` TINYINT(1) NOT NULL,
+  `_maxMember` INT NOT NULL,
+  `_createDate` DATETIME NOT NULL,
+  `_moimLevel` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`_id`, `_userId`));
