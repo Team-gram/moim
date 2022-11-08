@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -13,10 +13,5 @@ public class UserController {
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @GetMapping("/validate/{id}")
-    public long validateId(@PathVariable("id") long id) {
-        return userService.validateDuplicateUser(id).getId();
     }
 }

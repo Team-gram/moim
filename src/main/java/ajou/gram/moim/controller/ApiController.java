@@ -5,6 +5,7 @@ import ajou.gram.moim.util.enumeration.EnumMapper;
 import ajou.gram.moim.util.enumeration.EnumValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
@@ -12,12 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class MainController {
+@RequestMapping("/api")
+public class ApiController {
 
     private final EnumMapper enumMapper;
 
     @Autowired
-    public MainController(EnumMapper enumMapper) {
+    public ApiController(EnumMapper enumMapper) {
         this.enumMapper = enumMapper;
     }
     @GetMapping("/enum")
