@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/MoimPublic?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: root
+    password: moimroot
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  security:
+    oauth2:
+      client:
+          kakao:
+            client-id: 27769c331d08ceb2033e090a83e1e212
+            redirect-uri: http://localhost:8080/kakaologin
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: Kakao
+            scope:
+              - profile_nickname
+              - account_email
+          provider:
+            kakao:
+              authorization-uri: https://kauth.kakao.com/oauth/authorize
+              token-uri: https://kauth.kakao.com/oauth/token
+              user-info-uri: https://kapi.kakao.com/v2/user/me
+              user-name-attribute: id
+
+jwt:
+  header: Authorization
+  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+  token-validity-in-seconds: 86400
