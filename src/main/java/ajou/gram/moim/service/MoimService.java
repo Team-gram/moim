@@ -2,9 +2,11 @@ package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.Moim;
 import ajou.gram.moim.domain.MoimMember;
+import ajou.gram.moim.domain.UserMessage;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.repository.MoimMemberRepository;
 import ajou.gram.moim.repository.MoimRepository;
+import ajou.gram.moim.repository.UserMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ public class MoimService {
 
     private final MoimRepository moimRepository;
     private final MoimMemberRepository moimMemberRepository;
+    private final UserMessageRepository userMessageRepository;
 
     public List<Moim> getMoims(int categoryId) {
         return moimRepository.findByCategoryId(categoryId);
@@ -48,10 +51,14 @@ public class MoimService {
 
     public void moimJoinMessage(JoinMoimDto joinMoimDto) {
         Optional<Moim> moim = moimRepository.findById(joinMoimDto.getMoimId());
-        AtomicLong moimOwner = new AtomicLong(0L);
         moim.ifPresent(selectedMoim -> {
-            moimOwner.set(selectedMoim.getUserId());
+            UserMessage userMessage = new UserMessage();
+            userMessage.setFromId(joinMoimDto.getUserId());
+            userMessage.setToId(selectedMoim.getUserId());
+            userMessage.setMoimId(joinMoimDto.getMoimId());
+            userMessage.setType("JOIN");
+            userMessage.setMessage(joinMoimDto.getMessage());
+            userMessageRepository.save(userMessage);
         });
-        // 모임 방장에게 메세지 전송하는 로직
     }
 }

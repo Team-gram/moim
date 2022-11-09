@@ -47,7 +47,7 @@ public class MoimController {
     }
 
     @PostMapping("pass")
-    public String moimJoinMessage(@RequestBody JoinMoimDto joinMoimDto) {
+    public void moimJoinMessage(@RequestBody JoinMoimDto joinMoimDto) {
         moimService.moimJoinMessage(joinMoimDto);
     }
 }

@@ -36,23 +36,14 @@ public class UserService {
         Date to = fm.parse(from);
 
         User user = new User(
-                joinDto.getId(),
-                joinDto.getName(),
-                joinDto.getProfileImage(),
-                joinDto.getEmail(),
-                joinDto.getPhone(),
-                joinDto.getSido(),
-                joinDto.getSigungu(),
-                joinDto.getDong(),
+                joinDto.getId(), joinDto.getName(),
+                joinDto.getProfileImage(), joinDto.getEmail(), joinDto.getPhone(),
+                joinDto.getSido(), joinDto.getSigungu(), joinDto.getDong(),
                 joinDto.getGender(),
                 to,
-                joinDto.getDetail(),
-                joinDto.getIsPublish(),
-                new Date(),
-                null,
-                null,
-                (short) 0,
-                "USER"
+                joinDto.getDetail(), joinDto.getIsPublish(),
+                new Date(), null, null,
+                (short) 0, "USER"
         );
         userRepository.save(user);
 

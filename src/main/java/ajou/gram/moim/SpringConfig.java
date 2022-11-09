@@ -2,6 +2,7 @@ package ajou.gram.moim;
 
 import ajou.gram.moim.repository.MoimRepository;
 import ajou.gram.moim.repository.UserCategoryRepository;
+import ajou.gram.moim.repository.UserMessageRepository;
 import ajou.gram.moim.repository.UserRepository;
 import ajou.gram.moim.service.UserService;
 import ajou.gram.moim.util.aop.QuantitativeKPI;
@@ -18,6 +19,7 @@ public class SpringConfig {
     private final UserRepository userRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final MoimRepository moimRepository;
+    private final UserMessageRepository userMessageRepository;
     @Bean
     public EnumMapper enumMapper() {
         EnumMapper enumMapper = new EnumMapper();
