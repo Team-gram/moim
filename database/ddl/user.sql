@@ -3,7 +3,6 @@ CREATE TABLE `MoimPublic`.`user` (
   `name` CHAR(50) NOT NULL,
   `email` CHAR(50) NOT NULL,
   `profile_image` VARCHAR(200) NULL,
-  `password` VARCHAR(300) NOT NULL,
   `phone` CHAR(11) NOT NULL,
   `sido` CHAR(10) NOT NULL,
   `sigungu` CHAR(10) NOT NULL,
