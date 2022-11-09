@@ -1,6 +1,8 @@
 package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.Moim;
+import ajou.gram.moim.domain.MoimMember;
+import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.service.MoimService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +39,15 @@ public class MoimController {
     @GetMapping("title/{title}")
     public List<Moim> getMoimsByTitle(@PathVariable("title") String title) {
         return moimService.getMoimsByTitle(title);
+    }
+
+    @PostMapping("free")
+    public void moimJoin(@RequestBody MoimMember moimMember) {
+        moimService.moimJoin(moimMember);
+    }
+
+    @PostMapping("pass")
+    public String moimJoinMessage(@RequestBody JoinMoimDto joinMoimDto) {
+        moimService.moimJoinMessage(joinMoimDto);
     }
 }
