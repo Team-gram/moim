@@ -13,7 +13,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "moimMember")
+@Entity(name = "moim_member")
 @IdClass(MoimMemberPK.class)
 public class MoimMember {
 
