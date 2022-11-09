@@ -1,24 +1,23 @@
 package ajou.gram.moim;
 
+import ajou.gram.moim.repository.MoimRepository;
 import ajou.gram.moim.repository.UserCategoryRepository;
 import ajou.gram.moim.repository.UserRepository;
 import ajou.gram.moim.service.UserService;
 import ajou.gram.moim.util.aop.QuantitativeKPI;
 import ajou.gram.moim.util.enumeration.EnumContract;
 import ajou.gram.moim.util.enumeration.EnumMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class SpringConfig {
 
     private final UserRepository userRepository;
     private final UserCategoryRepository userCategoryRepository;
-    public SpringConfig(UserRepository userRepository, UserCategoryRepository userCategoryRepository) {
-        this.userRepository = userRepository;
-        this.userCategoryRepository = userCategoryRepository;
-    }
-
+    private final MoimRepository moimRepository;
     @Bean
     public EnumMapper enumMapper() {
         EnumMapper enumMapper = new EnumMapper();
