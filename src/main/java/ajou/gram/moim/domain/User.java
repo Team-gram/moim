@@ -26,8 +26,6 @@ public class User {
     private String profileImage;
     @Column(name = "email", length = 50, unique = true)
     private String email;
-    @Column(name = "password", length = 100)
-    private String password;
     @Column(name = "phone", length = 11)
     private String phone;
     @Column(name = "sido", length = 10)
