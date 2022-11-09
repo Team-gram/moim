@@ -30,4 +30,8 @@ public class MoimService {
         moim.setMoimLevel((short) 0);
         moimRepository.save(moim);
     }
+
+    public List<Moim> getMoimsByTitle(String title) {
+        return moimRepository.findByTitleLike("%" + title + "%");
+    }
 }
