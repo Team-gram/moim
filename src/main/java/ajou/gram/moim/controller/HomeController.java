@@ -1,15 +1,19 @@
 package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.User;
+import ajou.gram.moim.dto.JoinDto;
 import ajou.gram.moim.dto.KakaoDto;
 import ajou.gram.moim.dto.LoginDto;
 import ajou.gram.moim.repository.UserRepository;
 import ajou.gram.moim.service.OAuthService;
+import ajou.gram.moim.service.UserService;
+import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -19,7 +23,7 @@ import java.util.Optional;
 public class HomeController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private OAuthService oAuthService;
@@ -28,20 +32,9 @@ public class HomeController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/join")
-    public User join(@RequestBody User user) {
-        user.setId(1234567890);
-        user.setName("asd");
-        user.setPhone("111");
-        user.setGender("M");
-        user.setSido("seoul");
-        user.setSigungu("gangnam");
-        user.setDong("samsung");
-        user.setBirthday(new Date());
-        user.setRole("USER");
-        user.setRegisterDate(new Date());
-        user.setLevel((short) 0)
-        userRepository.save(user);
-        return user;
+    public JoinDto join(@RequestBody JoinDto joinDto) throws ParseException {
+        userService.addUser(joinDto);
+        return joinDto;
     }
 
     @PostMapping("/login")
@@ -53,7 +46,7 @@ public class HomeController {
     public long kakaoCallback (@RequestParam String code) {
         String accessToken = oAuthService.getKakaoAccessToken(code);
         KakaoDto kakaoDto = oAuthService.getKakaoUserInfo(accessToken);
-        Optional<User> user = userRepository.findById(kakaoDto.getId());
+        Optional<User> user = userService.validateId(kakaoDto.getId());
         long id = kakaoDto.getId();
         if (user.isEmpty()) {
             id = 0;
