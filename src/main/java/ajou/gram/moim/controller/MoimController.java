@@ -33,4 +33,9 @@ public class MoimController {
     public void addMoim(@RequestBody Moim moim) {
         moimService.addMoim(moim);
     }
+
+    @GetMapping("title/{title}")
+    public List<Moim> getMoimsByTitle(@PathVariable("title") String title) {
+        return moimService.getMoimsByTitle(title);
+    }
 }

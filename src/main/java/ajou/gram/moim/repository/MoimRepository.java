@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface MoimRepository extends JpaRepository<Moim, Long> {
     List<Moim> findByCategoryId(int categoryId);
+    List<Moim> findByTitleLike(String title);
 }
