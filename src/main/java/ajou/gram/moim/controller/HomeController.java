@@ -2,6 +2,7 @@ package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.User;
 import ajou.gram.moim.dto.KakaoDto;
+import ajou.gram.moim.dto.LoginDto;
 import ajou.gram.moim.repository.UserRepository;
 import ajou.gram.moim.service.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,14 @@ public class HomeController {
         user.setBirthday(new Date());
         user.setRole("USER");
         user.setRegisterDate(new Date());
-        user.setLevel((short) 0);
-        String rawPassword = user.getPassword();
-        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-        user.setPassword(encPassword);
+        user.setLevel((short) 0)
         userRepository.save(user);
         return user;
+    }
+
+    @PostMapping("/login")
+    public void login(@RequestBody LoginDto loginDto) {
+
     }
 
     @GetMapping("/kakaologin")
