@@ -7,6 +7,7 @@ import ajou.gram.moim.dto.LoginDto;
 import ajou.gram.moim.repository.UserRepository;
 import ajou.gram.moim.service.OAuthService;
 import ajou.gram.moim.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,16 +21,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/")
+@RequiredArgsConstructor
 public class HomeController {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private OAuthService oAuthService;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserService userService;
+    private final OAuthService oAuthService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/join")
     public JoinDto join(@RequestBody JoinDto joinDto) throws ParseException {

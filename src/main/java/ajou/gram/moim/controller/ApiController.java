@@ -3,6 +3,7 @@ package ajou.gram.moim.controller;
 import ajou.gram.moim.util.enumeration.EnumContract;
 import ajou.gram.moim.util.enumeration.EnumMapper;
 import ajou.gram.moim.util.enumeration.EnumValue;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,14 +15,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ApiController {
 
     private final EnumMapper enumMapper;
-
-    @Autowired
-    public ApiController(EnumMapper enumMapper) {
-        this.enumMapper = enumMapper;
-    }
     @GetMapping("/enum")
     public Map<String, List<EnumValue>> getEnum() {
         Map<String, List<EnumValue>> enumValues = new LinkedHashMap<>();

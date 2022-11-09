@@ -4,6 +4,7 @@ import ajou.gram.moim.domain.Moim;
 import ajou.gram.moim.domain.MoimMember;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.service.MoimService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,14 +13,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/moim")
+@RequiredArgsConstructor
 public class MoimController {
 
-    private MoimService moimService;
-
-    @Autowired
-    public MoimController(MoimService moimService) {
-        this.moimService = moimService;
-    }
+    private final MoimService moimService;
 
     @GetMapping("/cate/{category_id}")
     public List<Moim> getMoims(@PathVariable("category_id") int categoryId) {

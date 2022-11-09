@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @Transactional
@@ -58,6 +57,7 @@ public class MoimService {
             userMessage.setMoimId(joinMoimDto.getMoimId());
             userMessage.setType("JOIN");
             userMessage.setMessage(joinMoimDto.getMessage());
+            userMessage.setStatus((short) 0);
             userMessageRepository.save(userMessage);
         });
     }

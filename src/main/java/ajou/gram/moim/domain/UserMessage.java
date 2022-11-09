@@ -21,4 +21,5 @@ public class UserMessage {
     private long moimId;
     private String type;
     private String message;
+    private short status;
 }
