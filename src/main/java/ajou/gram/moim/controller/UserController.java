@@ -4,7 +4,6 @@ import ajou.gram.moim.domain.MoimMember;
 import ajou.gram.moim.domain.UserMessage;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.service.MoimService;
-import ajou.gram.moim.service.UserMessageService;
 import ajou.gram.moim.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +18,15 @@ public class UserController {
 
     private final UserService userService;
     private final MoimService moimService;
-    private final UserMessageService userMessageService;
+
+    @GetMapping("/schedule/{user_id}")
+    public String getUserSchedule(@PathVariable("user_id") long userId) {
+        return "";
+    }
 
     @GetMapping("/message/{user_id}")
     public List<UserMessage> getMessages(@PathVariable("user_id") long userId) {
-        return userMessageService.getMessages(userId);
+        return userService.getMessages(userId);
     }
 
     @PostMapping("/message/accept")
