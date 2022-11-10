@@ -2,8 +2,10 @@ package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.User;
 import ajou.gram.moim.domain.UserCategory;
+import ajou.gram.moim.domain.UserMessage;
 import ajou.gram.moim.dto.JoinDto;
 import ajou.gram.moim.repository.UserCategoryRepository;
+import ajou.gram.moim.repository.UserMessageRepository;
 import ajou.gram.moim.repository.UserRepository;
 import ajou.gram.moim.repository.UserRepositoryTemp;
 import ajou.gram.moim.util.jwt.JwtTokenProvider;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +30,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserCategoryRepository userCategoryRepository;
+    private final UserMessageRepository userMessageRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -61,5 +65,9 @@ public class UserService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         String token = jwtTokenProvider.createToken(authentication);
         return token;
+    }
+
+    public List<UserMessage> getMessages(long id) {
+        return userMessageRepository.findByUserId(id);
     }
 }

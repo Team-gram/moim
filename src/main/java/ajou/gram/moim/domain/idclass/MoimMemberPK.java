@@ -1,4 +1,4 @@
-package ajou.gram.moim.domain;
+package ajou.gram.moim.domain.idclass;
 
 import lombok.Data;
 

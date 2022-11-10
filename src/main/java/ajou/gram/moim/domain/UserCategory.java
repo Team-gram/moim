@@ -1,5 +1,6 @@
 package ajou.gram.moim.domain;
 
+import ajou.gram.moim.domain.idclass.UserCategoryPK;
 import lombok.*;
 
 import javax.persistence.Column;
