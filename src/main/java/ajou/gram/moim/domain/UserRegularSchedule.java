@@ -2,9 +2,7 @@ package ajou.gram.moim.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalTime;
 
 @Getter
@@ -14,7 +12,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Entity(name = "user_regular_schedule")
 public class UserRegularSchedule {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "user_id")
     private long userId;
