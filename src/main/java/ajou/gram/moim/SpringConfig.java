@@ -1,9 +1,6 @@
 package ajou.gram.moim;
 
-import ajou.gram.moim.repository.MoimRepository;
-import ajou.gram.moim.repository.UserCategoryRepository;
-import ajou.gram.moim.repository.UserMessageRepository;
-import ajou.gram.moim.repository.UserRepository;
+import ajou.gram.moim.repository.*;
 import ajou.gram.moim.service.UserService;
 import ajou.gram.moim.util.aop.QuantitativeKPI;
 import ajou.gram.moim.util.enumeration.EnumContract;
@@ -20,6 +17,7 @@ public class SpringConfig {
     private final UserCategoryRepository userCategoryRepository;
     private final MoimRepository moimRepository;
     private final UserMessageRepository userMessageRepository;
+    private final UserRegularScheduleRepository userRegularScheduleRepository;
     @Bean
     public EnumMapper enumMapper() {
         EnumMapper enumMapper = new EnumMapper();

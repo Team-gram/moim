@@ -3,11 +3,9 @@ package ajou.gram.moim.service;
 import ajou.gram.moim.domain.User;
 import ajou.gram.moim.domain.UserCategory;
 import ajou.gram.moim.domain.UserMessage;
+import ajou.gram.moim.domain.UserRegularSchedule;
 import ajou.gram.moim.dto.JoinDto;
-import ajou.gram.moim.repository.UserCategoryRepository;
-import ajou.gram.moim.repository.UserMessageRepository;
-import ajou.gram.moim.repository.UserRepository;
-import ajou.gram.moim.repository.UserRepositoryTemp;
+import ajou.gram.moim.repository.*;
 import ajou.gram.moim.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final UserMessageRepository userMessageRepository;
+    private final UserRegularScheduleRepository userRegularScheduleRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -69,5 +68,13 @@ public class UserService {
 
     public List<UserMessage> getMessages(long id) {
         return userMessageRepository.findByUserId(id);
+    }
+
+    public List<UserRegularSchedule> getUserRegularSchedule(long userId) {
+        return userRegularScheduleRepository.findByUserId(userId);
+    }
+
+    public void addUserRegularSchedule(UserRegularSchedule userRegularSchedule) {
+        userRegularScheduleRepository.save(userRegularSchedule);
     }
 }

@@ -2,6 +2,7 @@ package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.MoimMember;
 import ajou.gram.moim.domain.UserMessage;
+import ajou.gram.moim.domain.UserRegularSchedule;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.service.MoimService;
 import ajou.gram.moim.service.UserService;
@@ -20,8 +21,13 @@ public class UserController {
     private final MoimService moimService;
 
     @GetMapping("/schedule/{user_id}")
-    public String getUserSchedule(@PathVariable("user_id") long userId) {
-        return "";
+    public List<UserRegularSchedule> getUserRegularSchedule(@PathVariable("user_id") long userId) {
+        return userService.getUserRegularSchedule(userId);
+    }
+
+    @PostMapping("/schedule/regular")
+    public void addUserRegularSchedule(@RequestBody UserRegularSchedule userRegularSchedule) {
+        userService.addUserRegularSchedule(userRegularSchedule);
     }
 
     @GetMapping("/message/{user_id}")
