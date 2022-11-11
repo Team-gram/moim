@@ -67,7 +67,7 @@ public class UserService {
     }
 
     public List<UserMessage> getMessages(long id) {
-        return userMessageRepository.findByUserId(id);
+        return userMessageRepository.findByToId(id);
     }
 
     public List<UserRegularSchedule> getUserRegularSchedule(long userId) {

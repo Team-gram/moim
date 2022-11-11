@@ -4,18 +4,17 @@ import ajou.gram.moim.domain.User;
 import ajou.gram.moim.dto.JoinDto;
 import ajou.gram.moim.dto.KakaoDto;
 import ajou.gram.moim.dto.LoginDto;
-import ajou.gram.moim.repository.UserRepository;
 import ajou.gram.moim.service.OAuthService;
 import ajou.gram.moim.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.mapping.Join;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
-import javax.swing.text.html.Option;
 import java.text.ParseException;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -26,7 +25,6 @@ public class HomeController {
 
     private final UserService userService;
     private final OAuthService oAuthService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/join")
     public JoinDto join(@RequestBody JoinDto joinDto) throws ParseException {
@@ -34,20 +32,21 @@ public class HomeController {
         return joinDto;
     }
 
-    @PostMapping("/login")
-    public void login(@RequestBody LoginDto loginDto) {
-
+    @GetMapping("/login")
+    public String login() {
+        return "https://kauth.kakao.com/oauth/authorize?client_id=27769c331d08ceb2033e090a83e1e212&redirect_uri=http://localhost:8080/kakaologin&response_type=code";
     }
 
     @GetMapping("/kakaologin")
-    public long kakaoCallback (@RequestParam String code) {
+    public RedirectView kakaoCallback (@RequestParam String code) {
         String accessToken = oAuthService.getKakaoAccessToken(code);
         KakaoDto kakaoDto = oAuthService.getKakaoUserInfo(accessToken);
         Optional<User> user = userService.validateId(kakaoDto.getId());
-        long id = kakaoDto.getId();
-        if (user.isEmpty()) {
-            id = 0;
+        RedirectView redirectView = new RedirectView();
+        if (!user.isEmpty()) {
+            redirectView.addStaticAttribute("id", kakaoDto.getId());
         }
-        return id;
+        redirectView.setUrl("/");
+        return redirectView;
     }
 }
