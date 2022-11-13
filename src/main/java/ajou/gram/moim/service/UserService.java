@@ -40,7 +40,7 @@ public class UserService {
 
         User user = new User(
                 joinDto.getId(), joinDto.getName(),
-                joinDto.getProfileImage(), joinDto.getEmail(), joinDto.getPhone(),
+                joinDto.getProfileImage(), joinDto.getPhone(),
                 joinDto.getSido(), joinDto.getSigungu(), joinDto.getDong(),
                 joinDto.getGender(),
                 to,
