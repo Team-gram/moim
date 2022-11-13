@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class JoinDto {
     private long id;
-    private String email;
     private String name;
     private String profileImage;
     private String phone;
@@ -21,6 +20,6 @@ public class JoinDto {
     private String gender;
     private String birthday;
     private String detail;
-    private short isPublish;
+    private String isPublish;
     private List<Integer> categories;
 }
