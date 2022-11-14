@@ -12,13 +12,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EnumContractTest {
-
-    private final EnumMapper enumMapper = new EnumMapper();
-
-    @Test
-    public void getEnum() {
-        Map<String, List<EnumValue>> enumValues = new LinkedHashMap<>();
-        enumValues.put("joinStatus", enumMapper.toEnumValues(EnumContract.JoinStatus.class));
-        assertTrue(!enumValues.isEmpty());
-    }
+//
+//    private final EnumMapper enumMapper = new EnumMapper();
+//
+//    @Test
+//    public void getEnum() {
+//        Map<String, List<EnumValue>> enumValues = new LinkedHashMap<>();
+//        enumValues.put("joinStatus", enumMapper.toEnumValues(EnumContract.JoinStatus.class));
+//        assertTrue(!enumValues.isEmpty());
+//    }
 }
