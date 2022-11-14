@@ -1,6 +1,7 @@
 package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.MoimMember;
+import ajou.gram.moim.domain.User;
 import ajou.gram.moim.domain.UserMessage;
 import ajou.gram.moim.domain.UserRegularSchedule;
 import ajou.gram.moim.dto.JoinMoimDto;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -19,6 +21,11 @@ public class UserController {
 
     private final UserService userService;
     private final MoimService moimService;
+
+    @GetMapping("/")
+    public Optional<User> getUser(@RequestParam("id") long id) {
+        return userService.getUser(id);
+    }
 
     @GetMapping("/schedule/{user_id}")
     public List<UserRegularSchedule> getUserRegularSchedule(@PathVariable("user_id") long userId) {

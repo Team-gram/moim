@@ -24,8 +24,6 @@ public class User {
     private String name;
     @Column(name = "profile_image")
     private String profileImage;
-    @Column(name = "phone", length = 11)
-    private String phone;
     @Column(name = "sido", length = 10)
     private String sido;
     @Column(name = "sigungu", length = 10)
@@ -38,7 +36,7 @@ public class User {
     private Date birthday;
     @Column(name = "detail")
     private String detail;
-    @Column(name = "isPublish")
+    @Column(name = "isPublish", length = 1)
     private String isPublish;
     @Column(name = "registerDate")
     private Date registerDate;

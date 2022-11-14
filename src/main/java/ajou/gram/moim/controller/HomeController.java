@@ -36,7 +36,6 @@ public class HomeController {
             @Parameter(name = "id", description = "카카오 고유 아이디(필수)", example = "2580109343"),
             @Parameter(name = "name", description = "이름 or 닉네임(필수)", example = "kim minsu"),
             @Parameter(name = "profileImage", description = "프로필 사진"),
-            @Parameter(name = "phone", description = "전화번호(필수)", example = "01011112222"),
             @Parameter(name = "sido", description = "시/도(필수)", example = "서울특별시, 경기도"),
             @Parameter(name = "sigungu", description = "시/군/구(필수)", example = "수원시"),
             @Parameter(name = "dong", description = "동/읍/면(필수)", example = "원천동"),

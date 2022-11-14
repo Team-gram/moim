@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 @Service
 @Transactional
@@ -33,6 +34,10 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    public Optional<User> getUser(long id) {
+        return userRepository.findById(id);
+    }
+
     public void addUser(JoinDto joinDto) throws ParseException {
         String from = joinDto.getBirthday();
         SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
@@ -40,7 +45,7 @@ public class UserService {
 
         User user = new User(
                 joinDto.getId(), joinDto.getName(),
-                joinDto.getProfileImage(), joinDto.getPhone(),
+                joinDto.getProfileImage(),
                 joinDto.getSido(), joinDto.getSigungu(), joinDto.getDong(),
                 joinDto.getGender(),
                 to,
