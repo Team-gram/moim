@@ -49,12 +49,12 @@ public class HomeController {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @Operation(summary = "POST() join", description = "회원가입")
+    @Operation(summary = "POST() /join", description = "회원가입")
     @Parameters({
             @Parameter(name = "id", description = "카카오 고유 아이디(필수)", example = "2580109343"),
             @Parameter(name = "name", description = "이름 or 닉네임(필수)", example = "kim minsu"),
             @Parameter(name = "profileImage", description = "프로필 사진"),
-            @Parameter(name = "sido", description = "시/도(필수)", example = "서울특별시, 경기도"),
+            @Parameter(name = "sido", description = "시/도(필수)", example = "서울특별시 / 경기도"),
             @Parameter(name = "sigungu", description = "시/군/구(필수)", example = "수원시"),
             @Parameter(name = "dong", description = "동/읍/면(필수)", example = "원천동"),
             @Parameter(name = "gender", description = "성별(필수)", example = "M / W"),
@@ -69,6 +69,7 @@ public class HomeController {
         return joinDto;
     }
 
+    @Operation(summary = "GET() /login", description = "로그인")
     @GetMapping("/login")
     public String login(HttpServletRequest request) throws UnknownHostException {
         String hostDomain = request.getRequestURL().toString();
@@ -76,6 +77,7 @@ public class HomeController {
         return "https://kauth.kakao.com/oauth/authorize?client_id=27769c331d08ceb2033e090a83e1e212&redirect_uri=" + hostDomain + "/kakaologin&response_type=code";
     }
 
+    @Operation(summary = "GET() /kakaologin", description = "카카오 로그인 과정에서 호출되는 API로 프론트엔드에서는 사용하지 않는 API 임")
     @GetMapping("/kakaologin")
     public RedirectView kakaoCallback(@RequestParam String code) throws URISyntaxException {
         String accessToken = oAuthService.getKakaoAccessToken(code);
@@ -97,6 +99,10 @@ public class HomeController {
         return redirectView;
     }
 
+    @Operation(summary = "GET() /category/{parentId}", description = "카테고리 호출 API")
+    @Parameters({
+            @Parameter(name = "parentId", description = "카테고리의 부모 아이디(상위 카테고리를 원하면 0)", example = "0")
+    })
     @GetMapping("/category/{parentId}")
     public List<Category> getCategories(@PathVariable("parentId") int parentId) {
         return searchService.getCategories(parentId);

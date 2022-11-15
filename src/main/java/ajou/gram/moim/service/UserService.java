@@ -1,6 +1,7 @@
 package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.*;
+import ajou.gram.moim.dto.CreateRegularScheduleDto;
 import ajou.gram.moim.dto.JoinDto;
 import ajou.gram.moim.dto.KakaoDto;
 import ajou.gram.moim.repository.*;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -92,7 +94,16 @@ public class UserService {
         return userRegularScheduleRepository.findByUserId(userId);
     }
 
-    public void addUserRegularSchedule(UserRegularSchedule userRegularSchedule) {
+    public void addUserRegularSchedule(CreateRegularScheduleDto createRegularScheduleDto) {
+        LocalTime startTime = LocalTime.parse(createRegularScheduleDto.getStartTime());
+        LocalTime endTime = LocalTime.parse(createRegularScheduleDto.getEndTime());
+        UserRegularSchedule userRegularSchedule = new UserRegularSchedule();
+        userRegularSchedule.setUserId(createRegularScheduleDto.getUserId());
+        userRegularSchedule.setDay(createRegularScheduleDto.getDay());
+        userRegularSchedule.setStartTime(startTime);
+        userRegularSchedule.setEndTime(endTime);
+        userRegularSchedule.setTitle(createRegularScheduleDto.getTitle());
+        userRegularSchedule.setDetail(createRegularScheduleDto.getDetail());
         userRegularScheduleRepository.save(userRegularSchedule);
     }
 }

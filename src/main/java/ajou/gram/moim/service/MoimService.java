@@ -3,6 +3,7 @@ package ajou.gram.moim.service;
 import ajou.gram.moim.domain.Moim;
 import ajou.gram.moim.domain.MoimMember;
 import ajou.gram.moim.domain.UserMessage;
+import ajou.gram.moim.dto.CreateMoimDto;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.repository.MoimMemberRepository;
 import ajou.gram.moim.repository.MoimRepository;
@@ -34,7 +35,18 @@ public class MoimService {
         return moimRepository.findById(id);
     }
 
-    public void addMoim(Moim moim) {
+    public void addMoim(CreateMoimDto createMoimDto) {
+        Moim moim = new Moim();
+        moim.setUserId(createMoimDto.getUserId());
+        moim.setCategoryId(createMoimDto.getCategoryId());
+        moim.setTitle(createMoimDto.getTitle());
+        moim.setContent(createMoimDto.getContent());
+        moim.setSido(createMoimDto.getSido());
+        moim.setSigungu(createMoimDto.getSigungu());
+        moim.setDong(createMoimDto.getDong());
+        moim.setIsPublish(createMoimDto.getIsPublish());
+        moim.setIsFreeEnter(createMoimDto.getIsFreeEnter());
+        moim.setMaxMember(createMoimDto.getMaxMember());
         moim.setCreateDate(new Date());
         moim.setMoimLevel((short) 0);
         moimRepository.save(moim);
