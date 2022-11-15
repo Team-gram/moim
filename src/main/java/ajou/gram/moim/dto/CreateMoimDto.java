@@ -1,22 +1,14 @@
-package ajou.gram.moim.domain;
+package ajou.gram.moim.dto;
 
 import lombok.*;
-
-import javax.persistence.*;
-import java.util.Date;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "moim")
-public class Moim {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(name = "user_id")
+public class CreateMoimDto {
     private long userId;
-    @Column(name = "category_id")
     private int categoryId;
     private String title;
     private String content;
@@ -26,6 +18,4 @@ public class Moim {
     private String isPublish;
     private String isFreeEnter;
     private int maxMember;
-    private Date createDate;
-    private short moimLevel;
 }
