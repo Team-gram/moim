@@ -6,6 +6,7 @@ import ajou.gram.moim.domain.UserMessage;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.repository.MoimMemberRepository;
 import ajou.gram.moim.repository.MoimRepository;
+import ajou.gram.moim.repository.MoimRepositoryQuery;
 import ajou.gram.moim.repository.UserMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,12 @@ import java.util.Optional;
 public class MoimService {
 
     private final MoimRepository moimRepository;
+    private final MoimRepositoryQuery moimRepositoryEm;
     private final MoimMemberRepository moimMemberRepository;
     private final UserMessageRepository userMessageRepository;
 
-    public List<Moim> getMoims(int categoryId) {
-        return moimRepository.findByCategoryId(categoryId);
+    public List<Moim> getMoims(int categoryId, String sido, String sigungu, String dong, String title) {
+        return moimRepositoryEm.getMoims(categoryId, sido, sigungu, dong, title);
     }
 
     public Optional<Moim> getMoim(long id) {
@@ -36,10 +38,6 @@ public class MoimService {
         moim.setCreateDate(new Date());
         moim.setMoimLevel((short) 0);
         moimRepository.save(moim);
-    }
-
-    public List<Moim> getMoimsByTitle(String title) {
-        return moimRepository.findByTitleLike("%" + title + "%");
     }
 
     public void moimJoin(MoimMember moimMember) {

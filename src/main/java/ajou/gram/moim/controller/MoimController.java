@@ -5,7 +5,6 @@ import ajou.gram.moim.domain.MoimMember;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.service.MoimService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +17,13 @@ public class MoimController {
 
     private final MoimService moimService;
 
-    @GetMapping("/cate/{category_id}")
-    public List<Moim> getMoims(@PathVariable("category_id") int categoryId) {
-        return moimService.getMoims(categoryId);
+    @GetMapping({"", "/"})
+    public List<Moim> getMoims(@RequestParam(value = "categoryId", required = false, defaultValue = "0") int categoryId,
+                               @RequestParam(value = "sido", required = false) String sido,
+                               @RequestParam(value = "sigungu", required = false) String sigungu,
+                               @RequestParam(value = "dong", required = false) String dong,
+                               @RequestParam(value = "title", required = false) String title) {
+        return moimService.getMoims(categoryId, sido, sigungu, dong, title);
     }
 
     @GetMapping("/{id}")
@@ -31,11 +34,6 @@ public class MoimController {
     @PostMapping({" ", "/"})
     public void addMoim(@RequestBody Moim moim) {
         moimService.addMoim(moim);
-    }
-
-    @GetMapping("title/{title}")
-    public List<Moim> getMoimsByTitle(@PathVariable("title") String title) {
-        return moimService.getMoimsByTitle(title);
     }
 
     @PostMapping("free")
