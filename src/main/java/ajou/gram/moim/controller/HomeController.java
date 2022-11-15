@@ -27,8 +27,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -67,8 +70,10 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public String login() {
-        return "https://kauth.kakao.com/oauth/authorize?client_id=27769c331d08ceb2033e090a83e1e212&redirect_uri=http://localhost:8080/kakaologin&response_type=code";
+    public String login(HttpServletRequest request) throws UnknownHostException {
+        String hostDomain = request.getRequestURL().toString();
+        hostDomain = hostDomain.substring(0, hostDomain.lastIndexOf("/"));
+        return "https://kauth.kakao.com/oauth/authorize?client_id=27769c331d08ceb2033e090a83e1e212&redirect_uri=" + hostDomain + "/kakaologin&response_type=code";
     }
 
     @GetMapping("/kakaologin")
