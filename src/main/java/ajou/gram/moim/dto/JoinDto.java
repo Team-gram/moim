@@ -13,7 +13,6 @@ public class JoinDto {
     private long id;
     private String name;
     private String profileImage;
-    private String phone;
     private String sido;
     private String sigungu;
     private String dong;

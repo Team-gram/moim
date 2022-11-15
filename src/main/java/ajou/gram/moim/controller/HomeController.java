@@ -3,22 +3,31 @@ package ajou.gram.moim.controller;
 import ajou.gram.moim.domain.User;
 import ajou.gram.moim.dto.JoinDto;
 import ajou.gram.moim.dto.KakaoDto;
-import ajou.gram.moim.dto.LoginDto;
 import ajou.gram.moim.service.OAuthService;
 import ajou.gram.moim.service.UserService;
+import ajou.gram.moim.util.jwt.JsonWebToken;
+import ajou.gram.moim.util.jwt.JwtAuthenticationFilter;
+import ajou.gram.moim.util.jwt.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.Cookie;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -30,6 +39,8 @@ public class HomeController {
 
     private final UserService userService;
     private final OAuthService oAuthService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Operation(summary = "POST() join", description = "회원가입")
     @Parameters({
@@ -57,14 +68,22 @@ public class HomeController {
     }
 
     @GetMapping("/kakaologin")
-    public RedirectView kakaoCallback (@RequestParam String code) {
+    public RedirectView kakaoCallback(@RequestParam String code) throws URISyntaxException {
         String accessToken = oAuthService.getKakaoAccessToken(code);
         KakaoDto kakaoDto = oAuthService.getKakaoUserInfo(accessToken);
         Optional<User> user = userService.validateId(kakaoDto.getId());
-        RedirectView redirectView = new RedirectView();
-        if (!user.isEmpty()) {
-            redirectView.addStaticAttribute("id", kakaoDto.getId());
+        if (user.isEmpty()) {
+            userService.addUser(kakaoDto);
         }
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(kakaoDto.getId(), kakaoDto.getId());
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String jwt = jwtTokenProvider.createToken(authentication);
+
+        RedirectView redirectView = new RedirectView();
+        redirectView.addStaticAttribute("jwt", new JsonWebToken(jwt).getToken());
+        redirectView.addStaticAttribute("id", kakaoDto.getId());
         redirectView.setUrl("/");
         return redirectView;
     }

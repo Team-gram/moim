@@ -22,8 +22,8 @@ public class UserController {
     private final UserService userService;
     private final MoimService moimService;
 
-    @GetMapping("/")
-    public Optional<User> getUser(@RequestParam("id") long id) {
+    @GetMapping("/{id}")
+    public Optional<User> getUser(@PathVariable("id") long id) {
         return userService.getUser(id);
     }
 
