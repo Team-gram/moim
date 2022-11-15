@@ -71,11 +71,6 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
 
                 .and()
-                .formLogin()
-                .loginPage("/kauth.kakao.com/oauth/authorize?client_id=27769c331d08ceb2033e090a83e1e212&redirect_uri=http://localhost:8080/kakaologin&response_type=code")
-                .defaultSuccessUrl("/")
-
-                .and()
                 .apply(new JwtSecurityConfig(jwtTokenProvider));
 
         return http.build();

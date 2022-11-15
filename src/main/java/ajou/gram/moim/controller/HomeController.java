@@ -1,9 +1,11 @@
 package ajou.gram.moim.controller;
 
+import ajou.gram.moim.domain.Category;
 import ajou.gram.moim.domain.User;
 import ajou.gram.moim.dto.JoinDto;
 import ajou.gram.moim.dto.KakaoDto;
 import ajou.gram.moim.service.OAuthService;
+import ajou.gram.moim.service.SearchService;
 import ajou.gram.moim.service.UserService;
 import ajou.gram.moim.util.jwt.JsonWebToken;
 import ajou.gram.moim.util.jwt.JwtAuthenticationFilter;
@@ -28,6 +30,7 @@ import javax.servlet.http.Cookie;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -39,6 +42,7 @@ public class HomeController {
 
     private final UserService userService;
     private final OAuthService oAuthService;
+    private final SearchService searchService;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
@@ -86,5 +90,10 @@ public class HomeController {
         redirectView.addStaticAttribute("id", kakaoDto.getId());
         redirectView.setUrl("/");
         return redirectView;
+    }
+
+    @GetMapping("/category/{parentId}")
+    public List<Category> getCategories(@PathVariable("parentId") int parentId) {
+        return searchService.getCategories(parentId);
     }
 }

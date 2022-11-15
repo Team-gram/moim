@@ -18,6 +18,8 @@ public class SpringConfig {
     private final UserMessageRepository userMessageRepository;
     private final UserRegularScheduleRepository userRegularScheduleRepository;
 
+    private final CategoryRepository categoryRepository;
+
     private final MoimRepository moimRepository;
     @Bean
     public EnumMapper enumMapper() {
