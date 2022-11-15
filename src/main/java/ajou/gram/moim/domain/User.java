@@ -48,4 +48,5 @@ public class User {
     private short level;
     @Column(name = "role")
     private String role;
+    private String credential;
 }

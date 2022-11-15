@@ -5,5 +5,5 @@ CREATE TABLE `MoimPublic`.`user_message` (
   `moim_id` BIGINT(10) NOT NULL,
   `type` VARCHAR(10) NOT NULL,
   `message` VARCHAR(200) NULL,
-  `status` TINYINT(1) NOT NULL
+  `status` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`));
