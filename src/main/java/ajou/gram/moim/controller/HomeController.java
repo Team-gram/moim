@@ -72,13 +72,15 @@ public class HomeController {
             @ApiResponse(responseCode = "400", description = "회원가입 실패")
     })
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody JoinDto joinDto) throws ParseException {
+    public ResponseEntity<?> join(@RequestBody JoinDto joinDto) {
         try {
             userService.addUser(joinDto);
+            return ResponseEntity.ok().body(joinDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입 중 오류가 발생하였습니다.");
         } catch (ParseException e) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("입력한 값의 형식이 올바르지 않습니다.");
         }
-        return ResponseEntity.ok().body(joinDto);
     }
 
     @Operation(summary = "GET() /login", description = "로그인")
@@ -120,7 +122,6 @@ public class HomeController {
     })
     @GetMapping("/category/{parentId}")
     public ResponseEntity<List<Category>> getCategories(@PathVariable("parentId") int parentId) {
-        List<Category> categories = searchService.getCategories(parentId);
-        return ResponseEntity.ok().body(categories);
+        return ResponseEntity.ok().body(searchService.getCategories(parentId));
     }
 }
