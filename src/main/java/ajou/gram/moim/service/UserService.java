@@ -112,4 +112,7 @@ public class UserService {
         userRegularScheduleRepository.save(userRegularSchedule);
     }
 
+    public void deleteUserRegularSchedule(long userId, long scheduleId) {
+        userRegularScheduleRepository.deleteByUserIdAndId(userId, scheduleId);
+    }
 }

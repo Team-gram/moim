@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface UserRegularScheduleRepository extends JpaRepository<UserRegularSchedule, Long> {
     List<UserRegularSchedule> findByUserId(long userId);
     Optional<UserRegularSchedule>  findByUserIdAndId(long userId, long id);
+    void deleteByUserIdAndId(long userId, long id);
 }
