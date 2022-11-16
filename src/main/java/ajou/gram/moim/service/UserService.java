@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -57,18 +58,18 @@ public class UserService {
         String from = joinDto.getBirthday();
         SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
         Date to = fm.parse(from);
-
-        User user = new User(
-                joinDto.getId(), joinDto.getName(),
-                joinDto.getProfileImage(),
-                joinDto.getSido(), joinDto.getSigungu(), joinDto.getDong(),
-                joinDto.getGender(),
-                to,
-                joinDto.getDetail(), joinDto.getIsPublish(),
-                new Date(), null, null,
-                (short) 0, "USER", null
-        );
-        userRepository.save(user);
+        Optional<User> user = userRepository.findById(joinDto.getId());
+        user.ifPresent(selectedUser -> {
+            selectedUser.setName(joinDto.getName());
+            selectedUser.setSido(joinDto.getSido());
+            selectedUser.setSigungu(joinDto.getSigungu());
+            selectedUser.setDong(joinDto.getDong());
+            selectedUser.setGender(joinDto.getGender());
+            selectedUser.setBirthday(to);
+            selectedUser.setDetail(joinDto.getDetail());
+            selectedUser.setIsPublish(joinDto.getIsPublish());
+            userRepository.save(selectedUser);
+        });
 
         for (int i=0; i<joinDto.getCategories().size(); i++) {
             UserCategory category = new UserCategory(joinDto.getId(), joinDto.getCategories().get(i), (short) 1);
