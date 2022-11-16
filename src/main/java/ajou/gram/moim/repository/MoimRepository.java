@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MoimRepository extends JpaRepository<Moim, Long> {
-
+    Moim save(Moim moim);
 }
