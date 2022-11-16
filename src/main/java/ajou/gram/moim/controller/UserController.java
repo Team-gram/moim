@@ -1,9 +1,6 @@
 package ajou.gram.moim.controller;
 
-import ajou.gram.moim.domain.MoimMember;
-import ajou.gram.moim.domain.User;
-import ajou.gram.moim.domain.UserMessage;
-import ajou.gram.moim.domain.UserRegularSchedule;
+import ajou.gram.moim.domain.*;
 import ajou.gram.moim.dto.CreateRegularScheduleDto;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.service.MoimService;
@@ -45,6 +42,18 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<User>> getUser(@PathVariable("id") long id) {
         return ResponseEntity.ok().body(userService.getUser(id));
+    }
+
+    @Operation(summary = "GET() /user/moim/{userId}", description = "유저가 가입한 모임 조회")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 조회 성공", content = @Content(schema = @Schema(implementation = Moim.class)))
+    })
+    @GetMapping("/moim/{userId}")
+    public ResponseEntity<List<Optional<Moim>>> getUserMoims(@PathVariable("userId") long userId) {
+        return ResponseEntity.ok().body(moimService.getMoims(userId));
     }
 
     @Operation(summary = "GET() /user/schedule/{userId}", description = "유저 개인 일정 조회 (정기일정만 조회 가능)")
