@@ -91,6 +91,20 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "GET() /user/schedule/{userId}/{scheduleId}", description = "유저 개인 일정 상세 조회 (정기일정만 조회 가능)")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
+            @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "개인 일정 상세 조회 성공", content = @Content(schema = @Schema(implementation = UserRegularSchedule.class)))
+    })
+    @GetMapping("/schedule/{userId}/{scheduleId}")
+    public ResponseEntity<Optional<UserRegularSchedule>> getUserRegularScheduleDetail(@PathVariable("userId") long userId,
+                                                                                  @PathVariable("scheduleId") long scheduleId) {
+        return ResponseEntity.ok().body(userService.getUserRegularScheduleDetail(userId, scheduleId));
+    }
+
     @Operation(summary = "GET() /user/message/{userId}", description = "메세지 조회")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341")
