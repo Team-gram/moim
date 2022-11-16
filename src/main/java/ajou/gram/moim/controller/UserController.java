@@ -11,10 +11,17 @@ import ajou.gram.moim.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Column;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,18 +39,24 @@ public class UserController {
     @Parameters({
             @Parameter(name = "id", description = "유저 아이디(필수)", example = "2506012341")
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "유저 조회 성공", content = @Content(schema = @Schema(implementation = User.class)))
+    })
     @GetMapping("/{id}")
-    public Optional<User> getUser(@PathVariable("id") long id) {
-        return userService.getUser(id);
+    public ResponseEntity<Optional<User>> getUser(@PathVariable("id") long id) {
+        return ResponseEntity.ok().body(userService.getUser(id));
     }
 
     @Operation(summary = "GET() /user/schedule/{userId}", description = "유저 개인 일정 조회 (정기일정만 조회 가능)")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341")
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "개인 일정 조회 성공", content = @Content(schema = @Schema(implementation = UserRegularSchedule.class)))
+    })
     @GetMapping("/schedule/{userId}")
-    public List<UserRegularSchedule> getUserRegularSchedule(@PathVariable("userId") long userId) {
-        return userService.getUserRegularSchedule(userId);
+    public ResponseEntity<List<UserRegularSchedule>> getUserRegularSchedule(@PathVariable("userId") long userId) {
+        return ResponseEntity.ok().body(userService.getUserRegularSchedule(userId));
     }
 
     @Operation(summary = "POST() /user/schedule/regular", description = "유저 정기 일정 등록")
@@ -55,18 +68,30 @@ public class UserController {
             @Parameter(name = "title", description = "일정 이름(필수)", example = "공부"),
             @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간")
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정기 일정 등록 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class))),
+            @ApiResponse(responseCode = "400", description = "정기 일정 등록 실패")
+    })
     @PostMapping("/schedule/regular")
-    public void addUserRegularSchedule(@RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
-        userService.addUserRegularSchedule(createRegularScheduleDto);
+    public ResponseEntity<?> addUserRegularSchedule(@RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
+        try {
+            userService.addUserRegularSchedule(createRegularScheduleDto);
+            return ResponseEntity.ok().body(createRegularScheduleDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("일정 등록에 실패하였습니다.");
+        }
     }
 
     @Operation(summary = "GET() /user/message/{userId}", description = "메세지 조회")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341")
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "메세지 조회 성공", content = @Content(schema = @Schema(implementation = UserMessage.class)))
+    })
     @GetMapping("/message/{userId}")
-    public List<UserMessage> getMessages(@PathVariable("userId") long userId) {
-        return userService.getMessages(userId);
+    public ResponseEntity<List<UserMessage>> getMessages(@PathVariable("userId") long userId) {
+        return ResponseEntity.ok().body(userService.getMessages(userId));
     }
 
     @Operation(summary = "POST() /user/message/accept", description = "모임방 가입 승인")
@@ -74,11 +99,20 @@ public class UserController {
             @Parameter(name = "moimId", description = "모임방 아이디", example = "1"),
             @Parameter(name = "userId", description = "가입 승인할 유저 아이디", example = "2506012341")
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "가입 승인 성공", content = @Content(schema = @Schema(implementation = JoinMoimDto.class))),
+            @ApiResponse(responseCode = "400", description = "가입 승인 실패")
+    })
     @PostMapping("/message/accept")
-    public void moimJoinAccept(@RequestBody JoinMoimDto joinMoimDto) {
+    public ResponseEntity<?> moimJoinAccept(@RequestBody JoinMoimDto joinMoimDto) {
         MoimMember moimMember = new MoimMember();
         moimMember.setMoimId(joinMoimDto.getMoimId());
         moimMember.setUserId(joinMoimDto.getUserId());
-        moimService.moimJoin(moimMember);
+        try {
+            moimService.moimJoin(moimMember);
+            return ResponseEntity.ok().body(joinMoimDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("가입 승인을 실패하였습니다.");
+        }
     }
 }
