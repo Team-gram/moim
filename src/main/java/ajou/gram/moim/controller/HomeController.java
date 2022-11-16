@@ -13,6 +13,10 @@ import ajou.gram.moim.util.jwt.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -63,10 +67,18 @@ public class HomeController {
             @Parameter(name = "isPublish", description = "정보 공개 여부", example = "Y / N"),
             @Parameter(name = "categories", description = "카테고리", example = "[1, 2, 3]")
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(schema = @Schema(implementation = JoinDto.class))),
+            @ApiResponse(responseCode = "400", description = "회원가입 실패")
+    })
     @PostMapping("/join")
-    public JoinDto join(@RequestBody JoinDto joinDto) throws ParseException {
-        userService.addUser(joinDto);
-        return joinDto;
+    public ResponseEntity<?> join(@RequestBody JoinDto joinDto) throws ParseException {
+        try {
+            userService.addUser(joinDto);
+        } catch (ParseException e) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.ok().body(joinDto);
     }
 
     @Operation(summary = "GET() /login", description = "로그인")
@@ -103,8 +115,12 @@ public class HomeController {
     @Parameters({
             @Parameter(name = "parentId", description = "카테고리의 부모 아이디(상위 카테고리를 원하면 0)", example = "0")
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "카테고리 조회 성공", content = @Content(schema = @Schema(implementation = Category.class))),
+    })
     @GetMapping("/category/{parentId}")
-    public List<Category> getCategories(@PathVariable("parentId") int parentId) {
-        return searchService.getCategories(parentId);
+    public ResponseEntity<List<Category>> getCategories(@PathVariable("parentId") int parentId) {
+        List<Category> categories = searchService.getCategories(parentId);
+        return ResponseEntity.ok().body(categories);
     }
 }
