@@ -91,6 +91,24 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "DELETE() /user/schedule/{userId}/{scheduleId}", description = "유저 개인 일정 삭제")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
+            @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "개인 일정 삭제 성공", content = @Content(schema = @Schema(implementation = UserRegularSchedule.class)))
+    })
+    @DeleteMapping("/schedule/{userId}/{scheduleId}")
+    public ResponseEntity<UserRegularSchedule> deleteUserRegularSchedule(@PathVariable("userId") long userId,
+                                                       @PathVariable("scheduleId") long scheduleId) {
+        userService.deleteUserRegularSchedule(userId, scheduleId);
+        UserRegularSchedule userRegularSchedule = new UserRegularSchedule();
+        userRegularSchedule.setId(scheduleId);
+        userRegularSchedule.setUserId(userId);
+        return ResponseEntity.ok().body(userRegularSchedule);
+    }
+
     @Operation(summary = "GET() /user/schedule/{userId}/{scheduleId}", description = "유저 개인 일정 상세 조회 (정기일정만 조회 가능)")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
