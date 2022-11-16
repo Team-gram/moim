@@ -95,6 +95,10 @@ public class UserService {
         return userRegularScheduleRepository.findByUserId(userId);
     }
 
+    public Optional<UserRegularSchedule> getUserRegularScheduleDetail(long userId, long scheduleId) {
+        return userRegularScheduleRepository.findByUserIdAndId(userId, scheduleId);
+    }
+
     public void addUserRegularSchedule(CreateRegularScheduleDto createRegularScheduleDto) {
         LocalTime startTime = LocalTime.parse(createRegularScheduleDto.getStartTime());
         LocalTime endTime = LocalTime.parse(createRegularScheduleDto.getEndTime());
@@ -107,4 +111,5 @@ public class UserService {
         userRegularSchedule.setDetail(createRegularScheduleDto.getDetail());
         userRegularScheduleRepository.save(userRegularSchedule);
     }
+
 }
