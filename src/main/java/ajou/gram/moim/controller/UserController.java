@@ -83,9 +83,14 @@ public class UserController {
     })
     @PostMapping("/schedule/regular")
     public ResponseEntity<?> addUserRegularSchedule(@RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
+        boolean duplicate = userService.validateShedule(createRegularScheduleDto.getUserId(), createRegularScheduleDto);
         try {
-            userService.addUserRegularSchedule(createRegularScheduleDto);
-            return ResponseEntity.ok().body(createRegularScheduleDto);
+            if (duplicate) {
+                userService.addUserRegularSchedule(createRegularScheduleDto);
+                return ResponseEntity.ok().body(createRegularScheduleDto);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복된 일정입니다.");
+            }
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("일정 등록에 실패하였습니다.");
         }
@@ -102,16 +107,20 @@ public class UserController {
             @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "개인 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class)))
+            @ApiResponse(responseCode = "200", description = "개인 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class))),
+            @ApiResponse(responseCode = "400", description = "중복 일정이 존재하여 수정 실패")
     })
     @PatchMapping("/schedule/{userId}/{scheduleId}")
     public ResponseEntity<?> updateUserRegularSchedule(@PathVariable("userId") long userId,
                                                        @PathVariable("scheduleId") long scheduleId,
                                                        @RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
-        // 일정 중복 검사 로직 작성
-
-        userService.updateUserRegularSchedule(userId, scheduleId, createRegularScheduleDto);
-        return ResponseEntity.ok().body(createRegularScheduleDto);
+        boolean duplicate = userService.validateShedule(userId, createRegularScheduleDto);
+        // 중복된 일정이 자기 자신이라면 중복체크 통과하는 로직 //
+        if (duplicate) {
+            userService.updateUserRegularSchedule(userId, scheduleId, createRegularScheduleDto);
+            return ResponseEntity.ok().body(createRegularScheduleDto);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복된 일정입니다.");
     }
 
     @Operation(summary = "DELETE() /user/schedule/{userId}/{scheduleId}", description = "유저 개인 일정 삭제")
