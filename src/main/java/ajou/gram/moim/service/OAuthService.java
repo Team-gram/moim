@@ -7,6 +7,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,7 +15,9 @@ import java.net.URL;
 @Service
 public class OAuthService {
 
-    public String getKakaoAccessToken(String code) {
+    public String getKakaoAccessToken(String code, HttpServletRequest request) {
+        String hostDomain = request.getRequestURL().toString();
+        hostDomain = hostDomain.substring(0, hostDomain.lastIndexOf("/"));
         String accessToken = null;
         String refreshToken = null;
         String requestUrl = "https://kauth.kakao.com/oauth/token";
@@ -29,7 +32,7 @@ public class OAuthService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
 
-            kakaoBuilder(code, sb);
+            kakaoBuilder(code, hostDomain, sb);
             bw.write(sb.toString());
             bw.flush();
 
@@ -99,10 +102,10 @@ public class OAuthService {
         return kakaoDto;
     }
 
-    private static void kakaoBuilder(String code, StringBuilder sb) {
+    private static void kakaoBuilder(String code, String hostDomain, StringBuilder sb) {
         sb.append("grant_type=authorization_code");
         sb.append("&client_id=27769c331d08ceb2033e090a83e1e212");
-        sb.append("&redirect_uri=http://localhost:8080/kakaologin");
+        sb.append("&redirect_uri=" + hostDomain + "/kakaologin");
         sb.append("&code=" + code);
     }
 }

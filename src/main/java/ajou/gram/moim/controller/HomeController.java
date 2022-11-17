@@ -93,8 +93,8 @@ public class HomeController {
 
     @Operation(summary = "GET() /kakaologin", description = "카카오 로그인 과정에서 호출되는 API로 프론트엔드에서는 사용하지 않는 API 임")
     @GetMapping("/kakaologin")
-    public RedirectView kakaoCallback(@RequestParam String code) throws URISyntaxException {
-        String accessToken = oAuthService.getKakaoAccessToken(code);
+    public RedirectView kakaoCallback(@RequestParam String code, HttpServletRequest request) throws URISyntaxException {
+        String accessToken = oAuthService.getKakaoAccessToken(code, request);
         KakaoDto kakaoDto = oAuthService.getKakaoUserInfo(accessToken);
         Optional<User> user = userService.validateId(kakaoDto.getId());
         if (user.isEmpty()) {

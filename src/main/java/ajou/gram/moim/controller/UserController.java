@@ -168,8 +168,8 @@ public class UserController {
 
     @Operation(summary = "POST() /user/message/accept", description = "모임방 가입 승인")
     @Parameters({
-            @Parameter(name = "moimId", description = "모임방 아이디", example = "1"),
-            @Parameter(name = "userId", description = "가입 승인할 유저 아이디", example = "2506012341")
+            @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1"),
+            @Parameter(name = "userId", description = "가입 승인할 유저 아이디(필수)", example = "2506012341")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "가입 승인 성공", content = @Content(schema = @Schema(implementation = JoinMoimDto.class))),
@@ -186,5 +186,20 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("가입 승인을 실패하였습니다.");
         }
+    }
+
+    @Operation(summary = "GET() /user/recommend/{userId}", description = "추천 모임방 조회")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "250601234")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "추천 모임방 조회 성공", content = @Content(schema = @Schema(implementation = Moim.class)))
+    })
+    @GetMapping("/recommend/{userId}")
+    public void recommendMoim(@PathVariable("userId") long userId) {
+        Optional<User> user = userService.getUser(userId);
+        user.ifPresent(selectedUser -> {
+
+        });
     }
 }
