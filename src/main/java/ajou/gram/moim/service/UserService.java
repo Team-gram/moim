@@ -112,6 +112,20 @@ public class UserService {
         userRegularScheduleRepository.save(userRegularSchedule);
     }
 
+    public void updateUserRegularSchedule(long userId, long scheduleId, CreateRegularScheduleDto createRegularScheduleDto) {
+        LocalTime startTime = LocalTime.parse(createRegularScheduleDto.getStartTime());
+        LocalTime endTime = LocalTime.parse(createRegularScheduleDto.getEndTime());
+        UserRegularSchedule userRegularSchedule = new UserRegularSchedule();
+        userRegularSchedule.setId(scheduleId);
+        userRegularSchedule.setUserId(userId);
+        userRegularSchedule.setDay(createRegularScheduleDto.getDay());
+        userRegularSchedule.setStartTime(startTime);
+        userRegularSchedule.setEndTime(endTime);
+        userRegularSchedule.setTitle(createRegularScheduleDto.getTitle());
+        userRegularSchedule.setDetail(createRegularScheduleDto.getDetail());
+        userRegularScheduleRepository.save(userRegularSchedule);
+    }
+
     public void deleteUserRegularSchedule(long userId, long scheduleId) {
         userRegularScheduleRepository.deleteByUserIdAndId(userId, scheduleId);
     }

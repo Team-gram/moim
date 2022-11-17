@@ -72,8 +72,8 @@ public class UserController {
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
             @Parameter(name = "day", description = "요일(필수) [0:일요일, 1:월요일, 2:화요일, ...]", example = "0"),
-            @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hhmm]", example = "08:30"),
-            @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hhmm]", example = "12:00"),
+            @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hh:mm]", example = "08:30"),
+            @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hh:mm]", example = "12:00"),
             @Parameter(name = "title", description = "일정 이름(필수)", example = "공부"),
             @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간")
     })
@@ -91,6 +91,29 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "PATCH() /user/schedule/{userId}/{scheduleId}", description = "유저 개인 일정 수정")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
+            @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1"),
+            @Parameter(name = "day", description = "요일(필수) [0:일요일, 1:월요일, 2:화요일, ...]", example = "0"),
+            @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hh:mm]", example = "08:30"),
+            @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hh:mm]", example = "12:00"),
+            @Parameter(name = "title", description = "일정 이름(필수)", example = "공부"),
+            @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "개인 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class)))
+    })
+    @PatchMapping("/schedule/{userId}/{scheduleId}")
+    public ResponseEntity<?> updateUserRegularSchedule(@PathVariable("userId") long userId,
+                                                       @PathVariable("scheduleId") long scheduleId,
+                                                       @RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
+        // 일정 중복 검사 로직 작성
+
+        userService.updateUserRegularSchedule(userId, scheduleId, createRegularScheduleDto);
+        return ResponseEntity.ok().body(createRegularScheduleDto);
+    }
+
     @Operation(summary = "DELETE() /user/schedule/{userId}/{scheduleId}", description = "유저 개인 일정 삭제")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
@@ -101,7 +124,7 @@ public class UserController {
     })
     @DeleteMapping("/schedule/{userId}/{scheduleId}")
     public ResponseEntity<UserRegularSchedule> deleteUserRegularSchedule(@PathVariable("userId") long userId,
-                                                       @PathVariable("scheduleId") long scheduleId) {
+                                                                         @PathVariable("scheduleId") long scheduleId) {
         userService.deleteUserRegularSchedule(userId, scheduleId);
         UserRegularSchedule userRegularSchedule = new UserRegularSchedule();
         userRegularSchedule.setId(scheduleId);
