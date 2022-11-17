@@ -33,6 +33,7 @@ public class UserService {
     private final UserCategoryRepository userCategoryRepository;
     private final UserMessageRepository userMessageRepository;
     private final UserRegularScheduleRepository userRegularScheduleRepository;
+    private final UserRegularScheduleRepositoryQuery userRegularScheduleRepositoryQuery;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -97,6 +98,10 @@ public class UserService {
 
     public Optional<UserRegularSchedule> getUserRegularScheduleDetail(long userId, long scheduleId) {
         return userRegularScheduleRepository.findByUserIdAndId(userId, scheduleId);
+    }
+
+    public boolean validateShedule(long userId, CreateRegularScheduleDto createRegularScheduleDto) {
+        return userRegularScheduleRepositoryQuery.validateSchedule(userId, createRegularScheduleDto);
     }
 
     public void addUserRegularSchedule(CreateRegularScheduleDto createRegularScheduleDto) {
