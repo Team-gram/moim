@@ -1,6 +1,7 @@
 package ajou.gram.moim.repository;
 
 import ajou.gram.moim.domain.Moim;
+import ajou.gram.moim.domain.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,11 +16,11 @@ public class MoimRepositoryQuery {
     private final EntityManager em;
 
     public List<Moim> getMoims(int categoryId, String sido, String sigungu, String dong, String title) {
-        String query = "select m from moim m where 1=1 ";
         boolean f_sido = false;
         boolean f_sigungu = false;
         boolean f_dong = false;
         boolean f_title = false;
+        String query = "select m from moim m where 1=1 ";
         if (categoryId == 0) {
             query += "and m.categoryId >= :categoryId ";
         } else {
@@ -57,5 +58,10 @@ public class MoimRepositoryQuery {
         }
 
         return moims.getResultList();
+    }
+
+    public void getRecommendMoims(User user) {
+        String query =
+                "";
     }
 }
