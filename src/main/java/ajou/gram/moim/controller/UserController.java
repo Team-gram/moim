@@ -83,7 +83,7 @@ public class UserController {
     })
     @PostMapping("/schedule/regular")
     public ResponseEntity<?> addUserRegularSchedule(@RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
-        boolean duplicate = userService.validateShedule(createRegularScheduleDto.getUserId(), createRegularScheduleDto);
+        boolean duplicate = userService.validateShedule(createRegularScheduleDto.getUserId(), 0, createRegularScheduleDto);
         try {
             if (duplicate) {
                 userService.addUserRegularSchedule(createRegularScheduleDto);
@@ -114,8 +114,7 @@ public class UserController {
     public ResponseEntity<?> updateUserRegularSchedule(@PathVariable("userId") long userId,
                                                        @PathVariable("scheduleId") long scheduleId,
                                                        @RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
-        boolean duplicate = userService.validateShedule(userId, createRegularScheduleDto);
-        // 중복된 일정이 자기 자신이라면 중복체크 통과하는 로직 //
+        boolean duplicate = userService.validateShedule(userId, scheduleId, createRegularScheduleDto);
         if (duplicate) {
             userService.updateUserRegularSchedule(userId, scheduleId, createRegularScheduleDto);
             return ResponseEntity.ok().body(createRegularScheduleDto);

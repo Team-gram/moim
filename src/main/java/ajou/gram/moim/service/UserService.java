@@ -100,8 +100,8 @@ public class UserService {
         return userRegularScheduleRepository.findByUserIdAndId(userId, scheduleId);
     }
 
-    public boolean validateShedule(long userId, CreateRegularScheduleDto createRegularScheduleDto) {
-        return userRegularScheduleRepositoryQuery.validateSchedule(userId, createRegularScheduleDto);
+    public boolean validateShedule(long userId, long scheduleId,CreateRegularScheduleDto createRegularScheduleDto) {
+        return userRegularScheduleRepositoryQuery.validateSchedule(userId, scheduleId, createRegularScheduleDto);
     }
 
     public void addUserRegularSchedule(CreateRegularScheduleDto createRegularScheduleDto) {
