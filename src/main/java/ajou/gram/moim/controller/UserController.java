@@ -58,7 +58,7 @@ public class UserController {
     @Operation(summary = "GET() /user/schedule/{userId}/{type}", description = "유저 개인 일정 조회")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
-            @Parameter(name = "type", description = "일정 조회 타입(0: 전체, 1:정기, 2:비정기", example = "0")
+            @Parameter(name = "type", description = "일정 조회 타입(0: 전체, 1:정기, 2:비정기)", example = "0")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "개인 일정 조회 성공", content = @Content(schema = @Schema(implementation = UserRegularSchedule.class)))
@@ -293,7 +293,7 @@ public class UserController {
     public void recommendMoim(@PathVariable("userId") long userId) {
         Optional<User> user = userService.getUser(userId);
         user.ifPresent(selectedUser -> {
-
+            moimService.recommendMoim(userId);
         });
     }
 }
