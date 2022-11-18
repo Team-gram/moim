@@ -14,12 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Column;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,19 +55,33 @@ public class UserController {
         return ResponseEntity.ok().body(moimService.getMoims(userId));
     }
 
-    @Operation(summary = "GET() /user/schedule/{userId}", description = "유저 개인 일정 조회 (정기일정만 조회 가능)")
+    @Operation(summary = "GET() /user/schedule/{userId}/{type}", description = "유저 개인 일정 조회")
     @Parameters({
-            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341")
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
+            @Parameter(name = "type", description = "일정 조회 타입(0: 전체, 1:정기, 2:비정기", example = "0")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "개인 일정 조회 성공", content = @Content(schema = @Schema(implementation = UserRegularSchedule.class)))
     })
-    @GetMapping("/schedule/{userId}")
-    public ResponseEntity<List<UserRegularSchedule>> getUserRegularSchedule(@PathVariable("userId") long userId) {
-        return ResponseEntity.ok().body(userService.getUserRegularSchedule(userId));
+    @GetMapping("/schedule/{userId}/{type}")
+    public ResponseEntity<?> getUserRegularSchedule(@PathVariable("userId") long userId,
+                                                    @PathVariable("type") int type) {
+        JSONObject jsonObject = new JSONObject();
+        switch (type) {
+            case 1:
+                jsonObject.put("regular", userService.getUserRegularSchedule(userId));
+                return ResponseEntity.ok().body(userService.getUserRegularSchedule(userId));
+            case 2:
+                jsonObject.put("irregular", userService.getUserIrregularSchedule(userId));
+                return ResponseEntity.ok().body(userService.getUserIrregularSchedule(userId));
+            default:
+                jsonObject.put("regular", userService.getUserRegularSchedule(userId));
+                jsonObject.put("irregular", userService.getUserIrregularSchedule(userId));
+                return ResponseEntity.ok().body(jsonObject);
+        }
     }
 
-    @Operation(summary = "POST() /user/schedule/regular", description = "유저 정기 일정 등록")
+    @Operation(summary = "POST() /user/regular", description = "유저 정기 일정 등록")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
             @Parameter(name = "day", description = "요일(필수) [0:일요일, 1:월요일, 2:화요일, ...]", example = "0"),
@@ -81,7 +94,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "정기 일정 등록 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class))),
             @ApiResponse(responseCode = "400", description = "정기 일정 등록 실패")
     })
-    @PostMapping("/schedule/regular")
+    @PostMapping("/regular")
     public ResponseEntity<?> addUserRegularSchedule(@RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
         boolean duplicate = userService.validateShedule(createRegularScheduleDto.getUserId(), 0, createRegularScheduleDto);
         try {
@@ -96,7 +109,30 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "PATCH() /user/schedule/{userId}/{scheduleId}", description = "유저 개인 일정 수정")
+    @Operation(summary = "POST() /user/irregular", description = "유저 비정기 일정 등록")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
+            @Parameter(name = "date", description = "날짜(필수)", example = "2022-01-01"),
+            @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hh:mm]", example = "08:30"),
+            @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hh:mm]", example = "12:00"),
+            @Parameter(name = "title", description = "일정 이름(필수)", example = "공부"),
+            @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "비정기 일정 등록 성공", content = @Content(schema = @Schema(implementation = UserIrregularSchedule.class))),
+            @ApiResponse(responseCode = "400", description = "비정기 일정 등록 실패")
+    })
+    @PostMapping("/irregular")
+    public ResponseEntity<?> addUserIrregularSchedule(@RequestBody UserIrregularSchedule userIrregularSchedule) {
+        try {
+            userService.addUserIrregularSchedule(userIrregularSchedule);
+            return ResponseEntity.ok().body(userIrregularSchedule);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("일정 등록에 실패하였습니다.");
+        }
+    }
+
+    @Operation(summary = "PATCH() /user/regular/{userId}/{scheduleId}", description = "개인 정기 일정 수정")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
             @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1"),
@@ -107,10 +143,10 @@ public class UserController {
             @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "개인 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class))),
+            @ApiResponse(responseCode = "200", description = "개인 정기 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class))),
             @ApiResponse(responseCode = "400", description = "중복 일정이 존재하여 수정 실패")
     })
-    @PatchMapping("/schedule/{userId}/{scheduleId}")
+    @PatchMapping("/regular/{userId}/{scheduleId}")
     public ResponseEntity<?> updateUserRegularSchedule(@PathVariable("userId") long userId,
                                                        @PathVariable("scheduleId") long scheduleId,
                                                        @RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
@@ -122,15 +158,41 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복된 일정입니다.");
     }
 
-    @Operation(summary = "DELETE() /user/schedule/{userId}/{scheduleId}", description = "유저 개인 일정 삭제")
+    @Operation(summary = "PATCH() /user/irregular/{userId}/{scheduleId}", description = "개인 비정기 일정 수정")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
+            @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1"),
+            @Parameter(name = "date", description = "날짜(필수)", example = "2022-01-01"),
+            @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hh:mm]", example = "08:30"),
+            @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hh:mm]", example = "12:00"),
+            @Parameter(name = "title", description = "일정 이름(필수)", example = "공부"),
+            @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "개인 비정기 일정 수정 성공", content = @Content(schema = @Schema(implementation = UserIrregularSchedule.class))),
+            @ApiResponse(responseCode = "400", description = "개인 비정기 일정 수정 실패")
+    })
+    @PatchMapping("/irregular/{userId}/{scheduleId}")
+    public ResponseEntity<?> updateUserIrregularSchedule(@PathVariable("userId") long userId,
+                                                         @PathVariable("scheduleId") long scheduleId,
+                                                         @RequestBody UserIrregularSchedule userIrregularSchedule) {
+        try {
+            userService.updateUserIrregularSchedule(userId, scheduleId, userIrregularSchedule);
+            return ResponseEntity.ok().body(userIrregularSchedule);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("입력한 값의 형식이 올바르지 않습니다.");
+        }
+    }
+
+    @Operation(summary = "DELETE() /user/regular/{userId}/{scheduleId}", description = "개인 정기 일정 삭제")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
             @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "개인 일정 삭제 성공", content = @Content(schema = @Schema(implementation = UserRegularSchedule.class)))
+            @ApiResponse(responseCode = "200", description = "개인 정기 일정 삭제 성공", content = @Content(schema = @Schema(implementation = UserRegularSchedule.class)))
     })
-    @DeleteMapping("/schedule/{userId}/{scheduleId}")
+    @DeleteMapping("/regular/{userId}/{scheduleId}")
     public ResponseEntity<UserRegularSchedule> deleteUserRegularSchedule(@PathVariable("userId") long userId,
                                                                          @PathVariable("scheduleId") long scheduleId) {
         userService.deleteUserRegularSchedule(userId, scheduleId);
@@ -140,18 +202,50 @@ public class UserController {
         return ResponseEntity.ok().body(userRegularSchedule);
     }
 
-    @Operation(summary = "GET() /user/schedule/{userId}/{scheduleId}", description = "유저 개인 일정 상세 조회 (정기일정만 조회 가능)")
+    @Operation(summary = "DELETE() /user/irregular/{userId}/{scheduleId}", description = "개인 비정기 일정 삭제")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
             @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "개인 일정 상세 조회 성공", content = @Content(schema = @Schema(implementation = UserRegularSchedule.class)))
+            @ApiResponse(responseCode = "200", description = "개인 비정기 일정 삭제 성공", content = @Content(schema = @Schema(implementation = UserIrregularSchedule.class)))
     })
-    @GetMapping("/schedule/{userId}/{scheduleId}")
+    @DeleteMapping("/irregular/{userId}/{scheduleId}")
+    public ResponseEntity<UserIrregularSchedule> deleteUserIrregularSchedule(@PathVariable("userId") long userId,
+                                                                           @PathVariable("scheduleId") long scheduleId) {
+        userService.deleteUserIrregularSchedule(userId, scheduleId);
+        UserIrregularSchedule userIrregularSchedule = new UserIrregularSchedule();
+        userIrregularSchedule.setId(scheduleId);
+        userIrregularSchedule.setUserId(userId);
+        return ResponseEntity.ok().body(userIrregularSchedule);
+    }
+
+    @Operation(summary = "GET() /user/schedule/regular/{userId}/{scheduleId}", description = "개인 정기 일정 상세 조회")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
+            @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "개인 정기 일정 상세 조회 성공", content = @Content(schema = @Schema(implementation = UserRegularSchedule.class)))
+    })
+    @GetMapping("/schedule/regular/{userId}/{scheduleId}")
     public ResponseEntity<Optional<UserRegularSchedule>> getUserRegularScheduleDetail(@PathVariable("userId") long userId,
                                                                                   @PathVariable("scheduleId") long scheduleId) {
         return ResponseEntity.ok().body(userService.getUserRegularScheduleDetail(userId, scheduleId));
+    }
+
+    @Operation(summary = "GET() /user/schedule/irregular/{userId}/{scheduleId}", description = "개인 비정기 일정 상세 조회")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
+            @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "개인 비정기 일정 상세 조회 성공", content = @Content(schema = @Schema(implementation = UserIrregularSchedule.class)))
+    })
+    @GetMapping("/schedule/irregular/{userId}/{scheduleId}")
+    public ResponseEntity<Optional<UserIrregularSchedule>> getUserIrregularScheduleDetail(@PathVariable("userId") long userId,
+                                                                                          @PathVariable("scheduleId") long scheduleId) {
+        return ResponseEntity.ok().body(userService.getUserIrregularScheduleDetail(userId, scheduleId));
     }
 
     @Operation(summary = "GET() /user/message/{userId}", description = "메세지 조회")

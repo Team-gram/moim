@@ -7,7 +7,7 @@ import ajou.gram.moim.dto.KakaoDto;
 import ajou.gram.moim.repository.*;
 import ajou.gram.moim.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -15,14 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 @Service
 @Transactional
@@ -34,6 +32,7 @@ public class UserService {
     private final UserMessageRepository userMessageRepository;
     private final UserRegularScheduleRepository userRegularScheduleRepository;
     private final UserRegularScheduleRepositoryQuery userRegularScheduleRepositoryQuery;
+    private final UserIrregularScheduleRepository userIrregularScheduleRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -96,8 +95,8 @@ public class UserService {
         return userRegularScheduleRepository.findByUserId(userId);
     }
 
-    public Optional<UserRegularSchedule> getUserRegularScheduleDetail(long userId, long scheduleId) {
-        return userRegularScheduleRepository.findByUserIdAndId(userId, scheduleId);
+    public List<UserIrregularSchedule> getUserIrregularSchedule(long userId) {
+        return userIrregularScheduleRepository.findByUserId(userId);
     }
 
     public boolean validateShedule(long userId, long scheduleId,CreateRegularScheduleDto createRegularScheduleDto) {
@@ -117,6 +116,10 @@ public class UserService {
         userRegularScheduleRepository.save(userRegularSchedule);
     }
 
+    public void addUserIrregularSchedule(UserIrregularSchedule userIrregularSchedule) {
+        userIrregularScheduleRepository.save(userIrregularSchedule);
+    }
+
     public void updateUserRegularSchedule(long userId, long scheduleId, CreateRegularScheduleDto createRegularScheduleDto) {
         LocalTime startTime = LocalTime.parse(createRegularScheduleDto.getStartTime());
         LocalTime endTime = LocalTime.parse(createRegularScheduleDto.getEndTime());
@@ -131,7 +134,26 @@ public class UserService {
         userRegularScheduleRepository.save(userRegularSchedule);
     }
 
+    public void updateUserIrregularSchedule(long userId, long scheduleId, UserIrregularSchedule userIrregularSchedule) {
+        userIrregularSchedule.setUserId(userId);
+        userIrregularSchedule.setId(scheduleId);
+        userIrregularScheduleRepository.save(userIrregularSchedule);
+    }
+
     public void deleteUserRegularSchedule(long userId, long scheduleId) {
         userRegularScheduleRepository.deleteByUserIdAndId(userId, scheduleId);
+    }
+
+
+    public void deleteUserIrregularSchedule(long userId, long scheduleId) {
+        userIrregularScheduleRepository.deleteByUserIdAndId(userId, scheduleId);
+    }
+
+    public Optional<UserRegularSchedule> getUserRegularScheduleDetail(long userId, long scheduleId) {
+        return userRegularScheduleRepository.findByUserIdAndId(userId, scheduleId);
+    }
+
+    public Optional<UserIrregularSchedule> getUserIrregularScheduleDetail(long userId, long scheduleId) {
+        return userIrregularScheduleRepository.findByUserIdAndId(userId, scheduleId);
     }
 }

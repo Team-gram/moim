@@ -17,6 +17,7 @@ public class SpringConfig {
     private final UserCategoryRepository userCategoryRepository;
     private final UserMessageRepository userMessageRepository;
     private final UserRegularScheduleRepository userRegularScheduleRepository;
+    private final UserIrregularScheduleRepository userIrregularScheduleRepository;
 
     private final CategoryRepository categoryRepository;
 
