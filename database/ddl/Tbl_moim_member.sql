@@ -1,4 +1,4 @@
-CREATE TABLE `MoimPublic`.`moimMember` (
+CREATE TABLE `MoimPublic`.`moim_member` (
   `moim_id` BIGINT(10) NOT NULL,
   `user_id` BIGINT(10) NOT NULL,
   `registerDate` DATETIME NOT NULL,
