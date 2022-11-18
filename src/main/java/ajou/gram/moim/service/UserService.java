@@ -104,8 +104,8 @@ public class UserService {
     }
 
     public void addUserRegularSchedule(CreateRegularScheduleDto createRegularScheduleDto) {
-        LocalTime startTime = LocalTime.parse(createRegularScheduleDto.getStartTime());
-        LocalTime endTime = LocalTime.parse(createRegularScheduleDto.getEndTime());
+        LocalTime startTime = LocalTime.parse(timeParse(createRegularScheduleDto.getStartTime()));
+        LocalTime endTime = LocalTime.parse(timeParse(createRegularScheduleDto.getEndTime()));
         UserRegularSchedule userRegularSchedule = new UserRegularSchedule();
         userRegularSchedule.setUserId(createRegularScheduleDto.getUserId());
         userRegularSchedule.setDay(createRegularScheduleDto.getDay());
@@ -121,8 +121,8 @@ public class UserService {
     }
 
     public void updateUserRegularSchedule(long userId, long scheduleId, CreateRegularScheduleDto createRegularScheduleDto) {
-        LocalTime startTime = LocalTime.parse(createRegularScheduleDto.getStartTime());
-        LocalTime endTime = LocalTime.parse(createRegularScheduleDto.getEndTime());
+        LocalTime startTime = LocalTime.parse(timeParse(createRegularScheduleDto.getStartTime()));
+        LocalTime endTime = LocalTime.parse(timeParse(createRegularScheduleDto.getEndTime()));
         UserRegularSchedule userRegularSchedule = new UserRegularSchedule();
         userRegularSchedule.setId(scheduleId);
         userRegularSchedule.setUserId(userId);
@@ -155,5 +155,17 @@ public class UserService {
 
     public Optional<UserIrregularSchedule> getUserIrregularScheduleDetail(long userId, long scheduleId) {
         return userIrregularScheduleRepository.findByUserIdAndId(userId, scheduleId);
+    }
+
+    private static String timeParse(String time) {
+        String hour = time.split(":")[0];
+        String minute = time.split(":")[1];
+        if (hour.length() == 1) {
+            hour = "0" + hour;
+        }
+        if (minute.length() == 1) {
+            minute = "0" + minute;
+        }
+        return hour + ":" + minute;
     }
 }

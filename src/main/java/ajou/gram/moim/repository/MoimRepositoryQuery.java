@@ -62,6 +62,12 @@ public class MoimRepositoryQuery {
 
     public void getRecommendMoims(User user) {
         String query =
-                "";
+                "select user.id, user.name, user.sido, user.sigungu, user.dong, user.gender, user.birthday, moim.id, moim.category_id, " +
+                "moim.title, moim.content, moim.sido, moim.sigungu, moim.dong, moim.isFreeEnter, moim.maxMember, moim.createDate, moim.moimLevel " +
+                "from user user " +
+                "inner join moim_member member on user.id = member.user_id " +
+                "inner join moim moim on member.moim_id = moim.id " +
+                "where moim.isPublish = 'Y' " +
+                "and user.sido = :sido ";
     }
 }

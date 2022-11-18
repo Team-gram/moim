@@ -2,13 +2,11 @@ package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.Moim;
 import ajou.gram.moim.domain.MoimMember;
+import ajou.gram.moim.domain.User;
 import ajou.gram.moim.domain.UserMessage;
 import ajou.gram.moim.dto.CreateMoimDto;
 import ajou.gram.moim.dto.JoinMoimDto;
-import ajou.gram.moim.repository.MoimMemberRepository;
-import ajou.gram.moim.repository.MoimRepository;
-import ajou.gram.moim.repository.MoimRepositoryQuery;
-import ajou.gram.moim.repository.UserMessageRepository;
+import ajou.gram.moim.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +21,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MoimService {
 
+    private final UserRepository userRepository;
     private final MoimRepository moimRepository;
-    private final MoimRepositoryQuery moimRepositoryEm;
+    private final MoimRepositoryQuery moimRepositoryQuery;
     private final MoimMemberRepository moimMemberRepository;
     private final UserMessageRepository userMessageRepository;
 
     public List<Moim> getMoims(int categoryId, String sido, String sigungu, String dong, String title) {
-        return moimRepositoryEm.getMoims(categoryId, sido, sigungu, dong, title);
+        return moimRepositoryQuery.getMoims(categoryId, sido, sigungu, dong, title);
     }
 
     public List<Optional<Moim>> getMoims(long userId) {
@@ -86,6 +85,13 @@ public class MoimService {
             userMessage.setMessage(joinMoimDto.getMessage());
             userMessage.setStatus((short) 0);
             userMessageRepository.save(userMessage);
+        });
+    }
+
+    public void recommendMoim(long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        user.ifPresent(selectedUser -> {
+            moimRepositoryQuery.getRecommendMoims(selectedUser);
         });
     }
 }
