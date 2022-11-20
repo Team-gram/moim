@@ -1,9 +1,6 @@
 package ajou.gram.moim.service;
 
-import ajou.gram.moim.domain.Moim;
-import ajou.gram.moim.domain.MoimMember;
-import ajou.gram.moim.domain.User;
-import ajou.gram.moim.domain.UserMessage;
+import ajou.gram.moim.domain.*;
 import ajou.gram.moim.dto.CreateMoimDto;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.repository.*;
@@ -22,6 +19,8 @@ import java.util.Optional;
 public class MoimService {
 
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserCategoryRepository userCategoryRepository;
     private final MoimRepository moimRepository;
     private final MoimRepositoryQuery moimRepositoryQuery;
     private final MoimMemberRepository moimMemberRepository;
@@ -91,7 +90,7 @@ public class MoimService {
     public void recommendMoim(long userId) {
         Optional<User> user = userRepository.findById(userId);
         user.ifPresent(selectedUser -> {
-            moimRepositoryQuery.getRecommendMoims(selectedUser);
+            List<UserCategory> userCategories = userCategoryRepository.findByUserId(selectedUser.getId());
         });
     }
 }

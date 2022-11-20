@@ -84,7 +84,7 @@ public class UserController {
     @Operation(summary = "POST() /user/regular", description = "유저 정기 일정 등록")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
-            @Parameter(name = "day", description = "요일(필수) [0:일요일, 1:월요일, 2:화요일, ...]", example = "0"),
+            @Parameter(name = "day", description = "요일(필수) [0:월요일, 1:화요일, 2:수요일, ..., 6:일요일]", example = "0"),
             @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hh:mm]", example = "08:30"),
             @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hh:mm]", example = "12:00"),
             @Parameter(name = "title", description = "일정 이름(필수)", example = "공부"),
