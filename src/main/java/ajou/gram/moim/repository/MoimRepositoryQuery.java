@@ -60,7 +60,10 @@ public class MoimRepositoryQuery {
         return moims.getResultList();
     }
 
-    public void getRecommendMoims(User user) {
+    public void getRecommendMoims(User user, int categoryParentId) {
+        int min = 1;
+        int max = 3;
+        int recommendType = (int) ((Math.random() * (max - min)) + min);
         String query =
                 "select user.id, user.name, user.sido, user.sigungu, user.dong, user.gender, user.birthday, moim.id, moim.category_id, " +
                 "moim.title, moim.content, moim.sido, moim.sigungu, moim.dong, moim.isFreeEnter, moim.maxMember, moim.createDate, moim.moimLevel " +
@@ -69,5 +72,9 @@ public class MoimRepositoryQuery {
                 "inner join moim moim on member.moim_id = moim.id " +
                 "where moim.isPublish = 'Y' " +
                 "and user.sido = :sido ";
+        switch (recommendType) {
+            case 1:
+                query += "and ";
+        }
     }
 }
