@@ -113,7 +113,7 @@ public class HomeController {
         return redirectView;
     }
 
-    @Operation(summary = "GET() /category/{parentId}", description = "카테고리 호출 API")
+    @Operation(summary = "GET() /category/{parentId}", description = "카테고리 호출")
     @Parameters({
             @Parameter(name = "parentId", description = "카테고리의 부모 아이디(상위 카테고리를 원하면 0)", example = "0")
     })
@@ -123,5 +123,17 @@ public class HomeController {
     @GetMapping("/category/{parentId}")
     public ResponseEntity<List<Category>> getCategories(@PathVariable("parentId") int parentId) {
         return ResponseEntity.ok().body(searchService.getCategories(parentId));
+    }
+
+    @Operation(summary = "GET() /category/name/{categoryId}", description = "카테고리 이름 호출")
+    @Parameters({
+            @Parameter(name = "categoryId", description = "카테고리 아이디", example = "40")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "카테고리 이름 조회 성공", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @GetMapping("/category/name/{categoryId}")
+    public ResponseEntity<String> getCategoryName(@PathVariable("categoryId") int categoryId) {
+        return ResponseEntity.ok().body(searchService.getCategoryName(categoryId).getCategoryName());
     }
 }

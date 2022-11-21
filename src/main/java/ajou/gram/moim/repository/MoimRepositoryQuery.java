@@ -1,5 +1,6 @@
 package ajou.gram.moim.repository;
 
+import ajou.gram.moim.domain.Category;
 import ajou.gram.moim.domain.Moim;
 import ajou.gram.moim.domain.User;
 import lombok.AllArgsConstructor;
@@ -7,7 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -15,17 +19,30 @@ public class MoimRepositoryQuery {
 
     private final EntityManager em;
 
-    public List<Moim> getMoims(int categoryId, String sido, String sigungu, String dong, String title) {
+    public List<Moim> getMoims(int categoryId, String sido, String sigungu, String dong, String title, List<Category> categories) {
+        boolean f_parent = false;
         boolean f_sido = false;
         boolean f_sigungu = false;
         boolean f_dong = false;
         boolean f_title = false;
+        List<Integer> categoryIds = new ArrayList<>();
+
         String query = "select m from moim m where 1=1 ";
-        if (categoryId == 0) {
-            query += "and m.categoryId >= :categoryId ";
+
+        if (categories.size() > 0) {
+            query += "and m.categoryId in (:categories) ";
+            for (Category c : categories) {
+                categoryIds.add(c.getCategoryId());
+            }
+            f_parent = true;
         } else {
-            query += "and m.categoryId = :categoryId ";
+            if (categoryId == 0) {
+                query += "and m.categoryId >= :categoryId ";
+            } else {
+                query += "and m.categoryId = :categoryId ";
+            }
         }
+
         if (sido != null) {
             query += "and m.sido = :sido ";
             f_sido = true;
@@ -43,7 +60,11 @@ public class MoimRepositoryQuery {
             f_title = true;
         }
         TypedQuery<Moim> moims = em.createQuery(query, Moim.class).setMaxResults(1000);
-        moims = moims.setParameter("categoryId", categoryId);
+        if (f_parent) {
+            moims = moims.setParameter("categories", categoryIds);
+        } else {
+            moims = moims.setParameter("categoryId", categoryId);
+        }
         if (f_sido) {
             moims = moims.setParameter("sido", sido);
         }

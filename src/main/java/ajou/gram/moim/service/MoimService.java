@@ -19,7 +19,7 @@ import java.util.Optional;
 public class MoimService {
 
     private final UserRepository userRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryRepositoryQuery categoryRepositoryQuery;
     private final UserCategoryRepository userCategoryRepository;
     private final MoimRepository moimRepository;
     private final MoimRepositoryQuery moimRepositoryQuery;
@@ -27,7 +27,8 @@ public class MoimService {
     private final UserMessageRepository userMessageRepository;
 
     public List<Moim> getMoims(int categoryId, String sido, String sigungu, String dong, String title) {
-        return moimRepositoryQuery.getMoims(categoryId, sido, sigungu, dong, title);
+        List<Category> categories = categoryRepositoryQuery.findByCategoryIdAtCategoryParentId(categoryId);
+        return moimRepositoryQuery.getMoims(categoryId, sido, sigungu, dong, title, categories);
     }
 
     public List<Optional<Moim>> getMoims(long userId) {
