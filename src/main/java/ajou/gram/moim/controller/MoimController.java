@@ -90,7 +90,7 @@ public class MoimController {
 
     @Operation(summary = "POST() /moim/free", description = "모임방 자유 가입")
     @Parameters({
-            @Parameter(name = "id", description = "모임방 아이디(필수)", example = "1"),
+            @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1"),
             @Parameter(name = "userId", description = "가입하고자 하는 유저 아이디(필수)", example = "2501238503")
     })
     @ApiResponses({

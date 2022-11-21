@@ -18,4 +18,8 @@ public class SearchService {
     public List<Category> getCategories(int parentId) {
         return categoryRepository.findByCategoryParentId(parentId);
     }
+
+    public Category getCategoryName(int categoryId) {
+        return categoryRepository.findByCategoryId(categoryId);
+    }
 }
