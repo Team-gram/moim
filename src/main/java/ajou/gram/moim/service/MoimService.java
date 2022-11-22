@@ -1,6 +1,7 @@
 package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.*;
+import ajou.gram.moim.dto.ChatDto;
 import ajou.gram.moim.dto.CreateMoimDto;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.repository.*;
@@ -24,6 +25,7 @@ public class MoimService {
     private final MoimRepository moimRepository;
     private final MoimRepositoryQuery moimRepositoryQuery;
     private final MoimMemberRepository moimMemberRepository;
+    private final MoimChatRepository moimChatRepository;
     private final UserMessageRepository userMessageRepository;
 
     public List<Moim> getMoims(int categoryId, String sido, String sigungu, String dong, String title) {
@@ -88,10 +90,21 @@ public class MoimService {
         });
     }
 
-    public void recommendMoim(long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        user.ifPresent(selectedUser -> {
-            List<UserCategory> userCategories = userCategoryRepository.findByUserId(selectedUser.getId());
-        });
+    public void recommendMoim(User user) {
+        List<UserCategory> userCategories = userCategoryRepository.findByUserId(user.getId());
+    }
+
+    public List<MoimChat> getMoimChats(long moimId) {
+        return moimChatRepository.findByMoimId(moimId);
+    }
+
+    public void addChat(ChatDto chatDto) {
+        MoimChat moimChat = new MoimChat();
+        moimChat.setMoimId(chatDto.getMoimId());
+        moimChat.setContent(chatDto.getContent());
+        moimChat.setUserId(chatDto.getUserId());
+        moimChat.setDecoration(0);
+        moimChat.setCreatedAt(new Date());
+        moimChatRepository.save(moimChat);
     }
 }

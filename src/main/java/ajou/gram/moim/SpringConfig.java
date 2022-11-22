@@ -22,6 +22,7 @@ public class SpringConfig {
     private final CategoryRepository categoryRepository;
 
     private final MoimRepository moimRepository;
+    private final MoimChatRepository moimChatRepository;
     @Bean
     public EnumMapper enumMapper() {
         EnumMapper enumMapper = new EnumMapper();
