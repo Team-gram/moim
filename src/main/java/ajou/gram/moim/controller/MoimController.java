@@ -1,7 +1,9 @@
 package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.Moim;
+import ajou.gram.moim.domain.MoimChat;
 import ajou.gram.moim.domain.MoimMember;
+import ajou.gram.moim.dto.ChatDto;
 import ajou.gram.moim.dto.CreateMoimDto;
 import ajou.gram.moim.dto.JoinDto;
 import ajou.gram.moim.dto.JoinMoimDto;
@@ -76,18 +78,6 @@ public class MoimController {
         }
     }
 
-    @Operation(summary = "GET() /moim/{id}", description = "모임방 상세 조회")
-    @Parameters({
-            @Parameter(name = "id", description = "모임방 아이디(필수)", example = "1")
-    })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "모임방 상제 조회 성공", content = @Content(schema = @Schema(implementation = Moim.class)))
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Moim>> getMoim(@PathVariable("id") long id) {
-        return ResponseEntity.ok().body(moimService.getMoim(id));
-    }
-
     @Operation(summary = "POST() /moim/free", description = "모임방 자유 가입")
     @Parameters({
             @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1"),
@@ -97,7 +87,7 @@ public class MoimController {
             @ApiResponse(responseCode = "200", description = "자유 가입 성공", content = @Content(schema = @Schema(implementation = MoimMember.class))),
             @ApiResponse(responseCode = "400", description = "자유 가입 실패")
     })
-    @PostMapping("free")
+    @PostMapping("/free")
     public ResponseEntity<?> moimJoin(@RequestBody MoimMember moimMember) {
         try {
             moimService.moimJoin(moimMember);
@@ -117,13 +107,57 @@ public class MoimController {
             @ApiResponse(responseCode = "200", description = "가입 신청 성공", content = @Content(schema = @Schema(implementation = JoinMoimDto.class))),
             @ApiResponse(responseCode = "400", description = "가입 신청 실패")
     })
-    @PostMapping("pass")
+    @PostMapping("/pass")
     public ResponseEntity<?> moimJoinMessage(@RequestBody JoinMoimDto joinMoimDto) {
         try {
             moimService.moimJoinMessage(joinMoimDto);
             return ResponseEntity.ok().body(joinMoimDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("가입 신청을 실패하였습니다.");
+        }
+    }
+
+    @Operation(summary = "GET() /moim/{id}", description = "모임방 상세 조회")
+    @Parameters({
+            @Parameter(name = "id", description = "모임방 아이디(필수)", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임방 상제 조회 성공", content = @Content(schema = @Schema(implementation = Moim.class)))
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Moim>> getMoim(@PathVariable("id") long id) {
+        return ResponseEntity.ok().body(moimService.getMoim(id));
+    }
+
+    @Operation(summary = "GET() /moim/chat/{moimId}", description = "모임방 채팅 조회")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임방 채팅 조회 성공", content = @Content(schema = @Schema(implementation = MoimChat.class)))
+    })
+    @GetMapping("/chat/{moimId}")
+    public ResponseEntity<List<MoimChat>> getMoimChats(@PathVariable("moimId") long moimId) {
+        return ResponseEntity.ok().body(moimService.getMoimChats(moimId));
+    }
+
+    @Operation(summary = "POST() /moim/chat", description = "모임방 채팅 입력")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1"),
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2501238503"),
+            @Parameter(name = "content", description = "채팅 내용(필수)", example = "ㅋㅋㅋㅋ")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "가입 신청 성공", content = @Content(schema = @Schema(implementation = ChatDto.class))),
+            @ApiResponse(responseCode = "400", description = "가입 신청 실패")
+    })
+    @PostMapping("/chat")
+    public ResponseEntity<?> addChat(@RequestBody ChatDto chatDto) {
+        try {
+            moimService.addChat(chatDto);
+            return ResponseEntity.ok().body(chatDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("채팅 등록에 실패하였습니다.");
         }
     }
 }

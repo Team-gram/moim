@@ -293,7 +293,7 @@ public class UserController {
     public void recommendMoim(@PathVariable("userId") long userId) {
         Optional<User> user = userService.getUser(userId);
         user.ifPresent(selectedUser -> {
-            moimService.recommendMoim(userId);
+            moimService.recommendMoim(selectedUser);
         });
     }
 }
