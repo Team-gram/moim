@@ -72,10 +72,10 @@ public class UserController {
         switch (type) {
             case 1:
                 jsonObject.put("regular", userService.getUserRegularSchedule(userId));
-                return ResponseEntity.ok().body(userService.getUserRegularSchedule(userId));
+                return ResponseEntity.ok().body(jsonObject);
             case 2:
                 jsonObject.put("irregular", userService.getUserIrregularSchedule(userId));
-                return ResponseEntity.ok().body(userService.getUserIrregularSchedule(userId));
+                return ResponseEntity.ok().body(jsonObject);
             default:
                 jsonObject.put("regular", userService.getUserRegularSchedule(userId));
                 jsonObject.put("irregular", userService.getUserIrregularSchedule(userId));

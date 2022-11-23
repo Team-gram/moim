@@ -157,7 +157,7 @@ public class UserService {
         return userIrregularScheduleRepository.findByUserIdAndId(userId, scheduleId);
     }
 
-    private static String timeParse(String time) {
+    public static String timeParse(String time) {
         String hour = time.split(":")[0];
         String minute = time.split(":")[1];
         if (hour.length() == 1) {
