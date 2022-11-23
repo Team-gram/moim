@@ -1,12 +1,11 @@
 package ajou.gram.moim.controller;
 
-import ajou.gram.moim.domain.Moim;
-import ajou.gram.moim.domain.MoimChat;
-import ajou.gram.moim.domain.MoimMember;
+import ajou.gram.moim.domain.*;
 import ajou.gram.moim.dto.ChatDto;
 import ajou.gram.moim.dto.CreateMoimDto;
 import ajou.gram.moim.dto.JoinDto;
 import ajou.gram.moim.dto.JoinMoimDto;
+import ajou.gram.moim.service.MoimDetailService;
 import ajou.gram.moim.service.MoimService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +30,7 @@ import java.util.Optional;
 public class MoimController {
 
     private final MoimService moimService;
+    private final MoimDetailService moimDetailService;
 
     @Operation(summary = "GET() /moim", description = "모임방 조회 & 검색")
     @Parameters({
@@ -159,5 +160,32 @@ public class MoimController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("채팅 등록에 실패하였습니다.");
         }
+    }
+
+    @Operation(summary = "GET() /moim/schedule/{moimId}/{type}", description = "모임 일정 조회")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
+            @Parameter(name = "type", description = "일정 조회 타입(0: 전체, 1:정기, 2:비정기)", example = "0")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 일정 조회 성공", content = @Content(schema = @Schema(implementation = MoimRegularSchedule.class)))
+    })
+    @GetMapping("/schedule/{moimId}/{type}")
+    public ResponseEntity<?> getMoimRegularSchedule(@PathVariable("moimId") long moimId,
+                                                    @PathVariable("type") int type) {
+        JSONObject jsonObject = new JSONObject();
+        switch (type) {
+            case 1:
+                jsonObject.put("regular", moimDetailService.getMoimRegularSchedule(moimId));
+                return ResponseEntity.ok().body(jsonObject);
+//            case 2:
+//                jsonObject.put("irregular", userService.getUserIrregularSchedule(userId));
+//                return ResponseEntity.ok().body(userService.getUserIrregularSchedule(userId));
+//            default:
+//                jsonObject.put("regular", userService.getUserRegularSchedule(userId));
+//                jsonObject.put("irregular", userService.getUserIrregularSchedule(userId));
+//                return ResponseEntity.ok().body(jsonObject);
+        }
+        return ResponseEntity.ok().body("~");
     }
 }

@@ -20,8 +20,6 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class MoimService {
-
-    private final UserRepository userRepository;
     private final CategoryRepositoryQuery categoryRepositoryQuery;
     private final UserCategoryRepository userCategoryRepository;
     private final MoimRepository moimRepository;
