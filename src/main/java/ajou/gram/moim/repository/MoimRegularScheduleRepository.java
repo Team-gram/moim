@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface MoimRegularScheduleRepository extends JpaRepository<MoimRegularSchedule, Long> {
     List<MoimRegularSchedule> findByMoimId(long moimId);
+    void deleteByMoimIdAndId(long moimId, long scheduleId);
 }

@@ -1,10 +1,7 @@
 package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.*;
-import ajou.gram.moim.dto.ChatDto;
-import ajou.gram.moim.dto.CreateMoimDto;
-import ajou.gram.moim.dto.JoinDto;
-import ajou.gram.moim.dto.JoinMoimDto;
+import ajou.gram.moim.dto.*;
 import ajou.gram.moim.service.MoimDetailService;
 import ajou.gram.moim.service.MoimService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -187,5 +184,68 @@ public class MoimController {
 //                return ResponseEntity.ok().body(jsonObject);
         }
         return ResponseEntity.ok().body("~");
+    }
+
+    @Operation(summary = "POST() /moim/regular", description = "모임 정기 일정 등록")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
+            @Parameter(name = "day", description = "요일(필수) [0:월요일, 1:화요일, 2:수요일, ..., 6:일요일]", example = "0"),
+            @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hh:mm]", example = "08:30"),
+            @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hh:mm]", example = "12:00"),
+            @Parameter(name = "scheduleName", description = "일정 이름(필수)", example = "등산"),
+            @Parameter(name = "scheduleDetail", description = "일정 설명", example = "정기 등산 하는 날 입니다~")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 정기 일정 등록 성공", content = @Content(schema = @Schema(implementation = CreateMoimRegularScheduleDto.class))),
+            @ApiResponse(responseCode = "400", description = "모임 정기 일정 등록 실패")
+    })
+    @PostMapping("/regular")
+    public ResponseEntity<?> addMoimRegularSchedule(@RequestBody CreateMoimRegularScheduleDto createMoimRegularScheduleDto) {
+        try {
+            moimDetailService.addMoimRegularSchedule(createMoimRegularScheduleDto);
+            return ResponseEntity.ok().body(createMoimRegularScheduleDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("일정 등록에 실패하였습니다.");
+        }
+    }
+
+    @Operation(summary = "PATCH() /moim/regular/{moimId}/{scheduleId}", description = "모임 정기 일정 수정")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
+            @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1"),
+            @Parameter(name = "day", description = "요일(필수) [0:일요일, 1:월요일, 2:화요일, ...]", example = "0"),
+            @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hh:mm]", example = "08:30"),
+            @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hh:mm]", example = "12:00"),
+            @Parameter(name = "scheduleName", description = "일정 이름(필수)", example = "등산"),
+            @Parameter(name = "scheduleDetail", description = "일정 설명", example = "백두산 탈 사람")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 정기 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateMoimRegularScheduleDto.class))),
+            @ApiResponse(responseCode = "400", description = "모임 정기 일정 수정 실패")
+    })
+    @PatchMapping("/regular/{moimId}/{scheduleId}")
+    public ResponseEntity<?> updateMoimRegularSchedule(@PathVariable("moimId") long moimId,
+                                                       @PathVariable("scheduleId") long scheduleId,
+                                                       @RequestBody CreateMoimRegularScheduleDto createMoimRegularScheduleDto) {
+        moimDetailService.updateMoimRegularSchedule(moimId, scheduleId, createMoimRegularScheduleDto);
+        return ResponseEntity.ok().body(createMoimRegularScheduleDto);
+    }
+
+    @Operation(summary = "DELETE() /moim/regular/{moimId}/{scheduleId}", description = "모임 정기 일정 삭제")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
+            @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 정기 일정 삭제 성공", content = @Content(schema = @Schema(implementation = MoimRegularSchedule.class)))
+    })
+    @DeleteMapping("/regular/{moimId}/{scheduleId}")
+    public ResponseEntity<MoimRegularSchedule> deleteMoimRegularSchedule(@PathVariable("moimId") long moimId,
+                                                                         @PathVariable("scheduleId") long scheduleId) {
+        moimDetailService.deleteMoimRegularSchedule(moimId, scheduleId);
+        MoimRegularSchedule moimRegularSchedule = new MoimRegularSchedule();
+        moimRegularSchedule.setId(scheduleId);
+        moimRegularSchedule.setMoimId(moimId);
+        return ResponseEntity.ok().body(moimRegularSchedule);
     }
 }
