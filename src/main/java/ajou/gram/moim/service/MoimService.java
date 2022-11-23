@@ -6,9 +6,11 @@ import ajou.gram.moim.dto.CreateMoimDto;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,8 +92,9 @@ public class MoimService {
         });
     }
 
-    public void recommendMoim(User user) {
+    public JSONObject recommendMoim(User user) throws SQLException {
         List<UserCategory> userCategories = userCategoryRepository.findByUserId(user.getId());
+        return moimRepositoryQuery.getRecommendMoims(user, userCategories);
     }
 
     public List<MoimChat> getMoimChats(long moimId) {

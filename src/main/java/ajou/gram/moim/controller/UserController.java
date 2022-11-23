@@ -3,6 +3,7 @@ package ajou.gram.moim.controller;
 import ajou.gram.moim.domain.*;
 import ajou.gram.moim.dto.CreateRegularScheduleDto;
 import ajou.gram.moim.dto.JoinMoimDto;
+import ajou.gram.moim.dto.RecommendMoimDto;
 import ajou.gram.moim.service.MoimService;
 import ajou.gram.moim.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -287,13 +289,20 @@ public class UserController {
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "250601234")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "추천 모임방 조회 성공", content = @Content(schema = @Schema(implementation = Moim.class)))
+            @ApiResponse(responseCode = "200", description = "추천 모임방 조회 성공", content = @Content(schema = @Schema(implementation = RecommendMoimDto.class)))
     })
     @GetMapping("/recommend/{userId}")
-    public void recommendMoim(@PathVariable("userId") long userId) {
+    public ResponseEntity<?> recommendMoim(@PathVariable("userId") long userId) {
         Optional<User> user = userService.getUser(userId);
+        JSONObject jsonObject = new JSONObject();
         user.ifPresent(selectedUser -> {
-            moimService.recommendMoim(selectedUser);
+            try {
+                jsonObject.put("recommendMoims", moimService.recommendMoim(selectedUser));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         });
+
+        return ResponseEntity.ok().body(jsonObject);
     }
 }
