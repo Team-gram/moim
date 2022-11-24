@@ -2,9 +2,7 @@ package ajou.gram.moim.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -15,7 +13,7 @@ import java.util.Date;
 @Entity(name = "moim_chat")
 public class MoimChat {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "moim_id")
     private long moimId;
