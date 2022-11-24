@@ -1,14 +1,18 @@
 package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.MoimRegularSchedule;
+import ajou.gram.moim.domain.User;
 import ajou.gram.moim.domain.UserRegularSchedule;
 import ajou.gram.moim.dto.CreateMoimRegularScheduleDto;
 import ajou.gram.moim.dto.CreateRegularScheduleDto;
+import ajou.gram.moim.dto.MoimMemberScheduleDto;
 import ajou.gram.moim.repository.MoimRegularScheduleRepository;
+import ajou.gram.moim.repository.MoimScheduleRepositoryQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -20,6 +24,11 @@ import static ajou.gram.moim.service.UserService.timeParse;
 public class MoimDetailService {
 
     private final MoimRegularScheduleRepository moimRegularScheduleRepository;
+    private final MoimScheduleRepositoryQuery moimScheduleRepositoryQuery;
+
+    public List<MoimMemberScheduleDto> getMoimUserSchedules(long moimId) throws SQLException {
+        return moimScheduleRepositoryQuery.getMoimUserSchedules(moimId);
+    }
 
     public List<MoimRegularSchedule> getMoimRegularSchedule(long moimId) {
         return moimRegularScheduleRepository.findByMoimId(moimId);
