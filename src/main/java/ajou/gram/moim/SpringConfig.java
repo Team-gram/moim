@@ -1,5 +1,6 @@
 package ajou.gram.moim;
 
+import ajou.gram.moim.domain.MoimScheduleMember;
 import ajou.gram.moim.repository.*;
 import ajou.gram.moim.service.UserService;
 import ajou.gram.moim.util.aop.QuantitativeKPI;
@@ -27,6 +28,7 @@ public class SpringConfig {
     //private final MoimPlaceRepository moimPlaceRepository;
     private final MoimPlaceHistoryRepository moimPlaceHistoryRepository;
     private final MoimRegularScheduleRepository moimRegularScheduleRepository;
+    private final MoimScheduleMemberRepository moimScheduleMemberRepository;
     @Bean
     public EnumMapper enumMapper() {
         EnumMapper enumMapper = new EnumMapper();
