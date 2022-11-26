@@ -74,4 +74,8 @@ public class MoimDetailService {
         MoimScheduleMember moimScheduleMember = new MoimScheduleMember(joinMoimScheduleDto.getMoimId(), joinMoimScheduleDto.getMoimScheduleId(), joinMoimScheduleDto.getUserId());
         return moimScheduleMemberRepository.save(moimScheduleMember);
     }
+
+    public void moimScheduleCancle(JoinMoimScheduleDto joinMoimScheduleDto) {
+        moimScheduleMemberRepository.deleteByMoimIdAndMoimScheduleIdAndUserId(joinMoimScheduleDto.getMoimId(), joinMoimScheduleDto.getMoimScheduleId(), joinMoimScheduleDto.getUserId());
+    }
 }

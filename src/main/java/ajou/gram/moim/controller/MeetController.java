@@ -68,4 +68,19 @@ public class MeetController {
     public ResponseEntity<?> moimScheduleJoin(@RequestBody JoinMoimScheduleDto joinMoimScheduleDto) {
         return ResponseEntity.ok().body(moimDetailService.moimScheduleJoin(joinMoimScheduleDto));
     }
+
+    @Operation(summary = "DELETE() /meet", description = "모임 일정 참가 취소")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
+            @Parameter(name = "moimScheduleId", description = "모임 일정 아이디(필수)", example = "1"),
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "1234567890")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 일정 참가 취소 성공", content = @Content(schema = @Schema(implementation = MoimScheduleMember.class)))
+    })
+    @DeleteMapping("")
+    public ResponseEntity<?> moimScheduleCancle(@RequestBody JoinMoimScheduleDto joinMoimScheduleDto) {
+        moimDetailService.moimScheduleCancle(joinMoimScheduleDto);
+        return ResponseEntity.ok().body("ok");
+    }
 }
