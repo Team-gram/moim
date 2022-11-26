@@ -29,6 +29,7 @@ public class SpringConfig {
     private final MoimPlaceHistoryRepository moimPlaceHistoryRepository;
     private final MoimRegularScheduleRepository moimRegularScheduleRepository;
     private final MoimScheduleMemberRepository moimScheduleMemberRepository;
+    private final MoimScheduleReferenceRepository moimScheduleReferenceRepository;
     @Bean
     public EnumMapper enumMapper() {
         EnumMapper enumMapper = new EnumMapper();

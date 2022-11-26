@@ -1,12 +1,11 @@
 package ajou.gram.moim.service;
 
+import ajou.gram.moim.domain.Moim;
 import ajou.gram.moim.domain.MoimRegularSchedule;
 import ajou.gram.moim.domain.MoimScheduleMember;
+import ajou.gram.moim.domain.MoimScheduleReference;
 import ajou.gram.moim.dto.*;
-import ajou.gram.moim.repository.MoimRegularScheduleRepository;
-import ajou.gram.moim.repository.MoimScheduleMemberRepository;
-import ajou.gram.moim.repository.MoimScheduleMemberRepositoryQuery;
-import ajou.gram.moim.repository.MoimScheduleRepositoryQuery;
+import ajou.gram.moim.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static ajou.gram.moim.service.UserService.timeParse;
 
@@ -27,6 +27,8 @@ public class MoimDetailService {
     private final MoimScheduleMemberRepository moimScheduleMemberRepository;
     private final MoimScheduleMemberRepositoryQuery moimScheduleMemberRepositoryQuery;
 
+    private final MoimScheduleReferenceRepository moimScheduleReferenceRepository;
+    private final MoimScheduleReferenceRepositoryQuery moimScheduleReferenceRepositoryQuery;
     public List<MoimMemberScheduleDto> getMoimUserSchedules(long moimId) throws SQLException {
         return moimScheduleRepositoryQuery.getMoimUserSchedules(moimId);
     }
@@ -77,5 +79,31 @@ public class MoimDetailService {
 
     public void moimScheduleCancle(JoinMoimScheduleDto joinMoimScheduleDto) {
         moimScheduleMemberRepository.deleteByMoimIdAndMoimScheduleIdAndUserId(joinMoimScheduleDto.getMoimId(), joinMoimScheduleDto.getMoimScheduleId(), joinMoimScheduleDto.getUserId());
+    }
+
+    public List<MoimScheduleReferenceDto> getMoimScheduleReferences(long moimId, long moimScheduleId) throws SQLException {
+        return moimScheduleReferenceRepositoryQuery.getMoimScheduleReferences(moimId, moimScheduleId);
+    }
+
+    public void addMoimScheduleReference(MoimScheduleReferenceDto moimScheduleReferenceDto) {
+        MoimScheduleReference moimScheduleReference = new MoimScheduleReference();
+        moimScheduleReference.setMoimId(moimScheduleReferenceDto.getMoimId());
+        moimScheduleReference.setMoimScheduleId(moimScheduleReferenceDto.getMoimScheduleId());
+        moimScheduleReference.setName(moimScheduleReferenceDto.getName());
+        moimScheduleReference.setStatus("N");
+        moimScheduleReferenceRepository.save(moimScheduleReference);
+    }
+
+    public void updateMoimScheduleReference(MoimScheduleReference moimScheduleReference) {
+        Optional<MoimScheduleReference> moimScheduleReferenceOptional = moimScheduleReferenceRepository.findById(moimScheduleReference.getId());
+        moimScheduleReferenceOptional.ifPresent(m -> {
+            m.setStatus("Y");
+            m.setUserId(moimScheduleReference.getUserId());
+            moimScheduleReferenceRepository.save(m);
+        });
+    }
+
+    public void deleteMoimScheduleReference(MoimScheduleReference moimScheduleReference) {
+        moimScheduleReferenceRepository.deleteById(moimScheduleReference.getId());
     }
 }
