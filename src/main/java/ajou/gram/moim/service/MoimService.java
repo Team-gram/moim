@@ -70,6 +70,22 @@ public class MoimService {
         moimMemberRepository.save(moimMember);
     }
 
+    public void updateMoim(Moim moim) {
+        Optional<Moim> moimOptional = moimRepository.findById(moim.getId());
+        moimOptional.ifPresent(m -> {
+            if (moim.getCategoryId() != 0) m.setCategoryId(moim.getCategoryId());
+            if (moim.getTitle() != null) m.setTitle(moim.getTitle());
+            if (moim.getContent() != null) m.setContent(moim.getContent());
+            if (moim.getSido() != null)m.setSido(moim.getSido());
+            if (moim.getSigungu() != null) m.setSigungu(moim.getSigungu());
+            if (moim.getDong() != null) m.setDong(moim.getDong());
+            if (moim.getIsPublish() != null) m.setIsPublish(moim.getIsPublish());
+            if (moim.getIsFreeEnter() != null) m.setIsFreeEnter(moim.getIsFreeEnter());
+            if (moim.getMaxMember() != 0) m.setMaxMember(moim.getMaxMember());
+            moimRepository.save(m);
+        });
+    }
+
     public void moimJoin(MoimMember moimMember) {
         moimMember.setRegisterDate(new Date());
         moimMember.setLevel((short) 2);

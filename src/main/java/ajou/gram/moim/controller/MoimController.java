@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 @Tag(name = "moim", description = "모임방 관련 API")
 @RestController
 @RequestMapping("/moim")
@@ -86,6 +88,26 @@ public class MoimController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("모임방 개설에 실패하였습니다.");
         }
+    }
+
+    @Operation(summary = "PATCH() /moim", description = "모임방 정보 수정")
+    @Parameters({
+            @Parameter(name = "id", description = "모임방 아이디(필수)", example = "1"),
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "1234567890"),
+            @Parameter(name = "categoryId", description = "카테고리 하위 아이디", example = "1"),
+            @Parameter(name = "title", description = "모임방 이름", example = "즐거운 모임"),
+            @Parameter(name = "content", description = "모임방 설명", example = "친목 모임 입니다."),
+            @Parameter(name = "sido", description = "시/도", example = "서울특별시"),
+            @Parameter(name = "sigungu", description = "시/군/구", example = "강남시"),
+            @Parameter(name = "dong", description = "동/읍/면", example = "삼성동"),
+            @Parameter(name = "isPublish", description = "모임방 공개 여부", example = "Y / N"),
+            @Parameter(name = "isFreeEnter", description = "자유 가입 여부", example = "Y / N"),
+            @Parameter(name = "maxMember", description = "모임방 최대 인원 수", example = "30")
+    })
+    @PatchMapping("")
+    public ResponseEntity<?> updateMoim(@RequestBody Moim moim) {
+        moimService.updateMoim(moim);
+        return ResponseEntity.ok().body(moim);
     }
 
     @Operation(summary = "POST() /moim/free", description = "모임방 자유 가입")
