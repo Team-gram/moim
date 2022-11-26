@@ -1,12 +1,11 @@
 package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.MoimRegularSchedule;
-import ajou.gram.moim.domain.User;
-import ajou.gram.moim.domain.UserRegularSchedule;
-import ajou.gram.moim.dto.CreateMoimRegularScheduleDto;
-import ajou.gram.moim.dto.CreateRegularScheduleDto;
-import ajou.gram.moim.dto.MoimMemberScheduleDto;
+import ajou.gram.moim.domain.MoimScheduleMember;
+import ajou.gram.moim.dto.*;
 import ajou.gram.moim.repository.MoimRegularScheduleRepository;
+import ajou.gram.moim.repository.MoimScheduleMemberRepository;
+import ajou.gram.moim.repository.MoimScheduleMemberRepositoryQuery;
 import ajou.gram.moim.repository.MoimScheduleRepositoryQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,8 @@ public class MoimDetailService {
 
     private final MoimRegularScheduleRepository moimRegularScheduleRepository;
     private final MoimScheduleRepositoryQuery moimScheduleRepositoryQuery;
+    private final MoimScheduleMemberRepository moimScheduleMemberRepository;
+    private final MoimScheduleMemberRepositoryQuery moimScheduleMemberRepositoryQuery;
 
     public List<MoimMemberScheduleDto> getMoimUserSchedules(long moimId) throws SQLException {
         return moimScheduleRepositoryQuery.getMoimUserSchedules(moimId);
@@ -63,5 +64,14 @@ public class MoimDetailService {
 
     public void deleteMoimRegularSchedule(long moimId, long scheduleId) {
         moimRegularScheduleRepository.deleteByMoimIdAndId(moimId, scheduleId);
+    }
+
+    public List<MoimScheduleMemberDto> getMoimScheduleMembers(long moimId, long moimScheduleId) throws SQLException {
+        return moimScheduleMemberRepositoryQuery.getMoimScheduleMembers(moimId, moimScheduleId);
+    }
+
+    public MoimScheduleMember moimScheduleJoin(JoinMoimScheduleDto joinMoimScheduleDto) {
+        MoimScheduleMember moimScheduleMember = new MoimScheduleMember(joinMoimScheduleDto.getMoimId(), joinMoimScheduleDto.getMoimScheduleId(), joinMoimScheduleDto.getUserId());
+        return moimScheduleMemberRepository.save(moimScheduleMember);
     }
 }
