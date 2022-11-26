@@ -68,7 +68,7 @@ public class MoimDetailService {
         moimRegularScheduleRepository.deleteByMoimIdAndId(moimId, scheduleId);
     }
 
-    public List<MoimScheduleMemberDto> getMoimScheduleMembers(long moimId, long moimScheduleId) throws SQLException {
+    public List<MoimScheduleMemberDto> getMoimUsers(long moimId, long moimScheduleId) throws SQLException {
         return moimScheduleMemberRepositoryQuery.getMoimScheduleMembers(moimId, moimScheduleId);
     }
 

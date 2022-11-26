@@ -8,4 +8,5 @@ import java.util.List;
 public interface MoimMemberRepository extends JpaRepository<MoimMember, Long> {
 
     List<MoimMember> findByUserId(long userId);
+    List<MoimMember> findByMoimId(long moimId);
 }

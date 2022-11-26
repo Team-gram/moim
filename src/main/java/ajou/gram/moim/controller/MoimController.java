@@ -49,6 +49,18 @@ public class MoimController {
         return ResponseEntity.ok().body(moimService.getMoims(categoryId, sido, sigungu, dong, title));
     }
 
+    @Operation(summary = "GET() /moim/member/{moimId}", description = "모임방에 가입한 유저 조회")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 유저 리스트 조회 성공", content = @Content(schema = @Schema(implementation = MoimMember.class)))
+    })
+    @GetMapping("/member/{moimId}")
+    public ResponseEntity<List<MoimMember>> getMoims(@PathVariable("moimId") long moimId) {
+        return ResponseEntity.ok().body(moimService.getMoimMembers(moimId));
+    }
+
     @Operation(summary = "POST() /moim", description = "모임방 개설")
     @Parameters({
             @Parameter(name = "userId", description = "모임방 개설자 아이디(필수)", example = "2501213540"),
