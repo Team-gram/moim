@@ -53,9 +53,9 @@ public class MeetController {
             @ApiResponse(responseCode = "200", description = "모임 일정에 참가한 멤버 리스트 조회 성공", content = @Content(schema = @Schema(implementation = MoimScheduleMemberDto.class)))
     })
     @GetMapping("/{moimId}/{moimScheduleId}")
-    public ResponseEntity<?> getMoimUserSchedules(@PathVariable("moimId") long moimId,
+    public ResponseEntity<?> getMoimUsers(@PathVariable("moimId") long moimId,
                                                   @PathVariable("moimScheduleId") long moimScheduleId) throws SQLException {
-        return ResponseEntity.ok().body(moimDetailService.getMoimScheduleMembers(moimId, moimScheduleId));
+        return ResponseEntity.ok().body(moimDetailService.getMoimUsers(moimId, moimScheduleId));
     }
 
     @Operation(summary = "POST() /meet", description = "모임 일정 참가")

@@ -108,4 +108,8 @@ public class MoimService {
         moimChat.setCreatedAt(new Date());
         moimChatRepository.save(moimChat);
     }
+
+    public List<MoimMember> getMoimMembers(long moimId) {
+        return moimMemberRepository.findByMoimId(moimId);
+    }
 }
