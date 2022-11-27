@@ -1,6 +1,7 @@
 package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.*;
+import ajou.gram.moim.dto.AcceptDto;
 import ajou.gram.moim.dto.CreateRegularScheduleDto;
 import ajou.gram.moim.dto.JoinMoimDto;
 import ajou.gram.moim.dto.RecommendMoimDto;
@@ -264,25 +265,29 @@ public class UserController {
 
     @Operation(summary = "POST() /user/message/accept", description = "모임방 가입 승인")
     @Parameters({
+            @Parameter(name = "messageId", description = "메세지 아이디(필수)", example = "1"),
             @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1"),
             @Parameter(name = "userId", description = "가입 승인할 유저 아이디(필수)", example = "2506012341")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "가입 승인 성공", content = @Content(schema = @Schema(implementation = JoinMoimDto.class))),
+            @ApiResponse(responseCode = "200", description = "가입 승인 성공", content = @Content(schema = @Schema(implementation = AcceptDto.class))),
             @ApiResponse(responseCode = "400", description = "가입 승인 실패")
     })
     @PostMapping("/message/accept")
-    public ResponseEntity<?> moimJoinAccept(@RequestBody JoinMoimDto joinMoimDto) {
+    public ResponseEntity<?> moimJoinAccept(@RequestBody AcceptDto acceptDto) {
         MoimMember moimMember = new MoimMember();
-        moimMember.setMoimId(joinMoimDto.getMoimId());
-        moimMember.setUserId(joinMoimDto.getUserId());
+        moimMember.setMoimId(acceptDto.getMoimId());
+        moimMember.setUserId(acceptDto.getUserId());
         try {
             moimService.moimJoin(moimMember);
-            return ResponseEntity.ok().body(joinMoimDto);
+            userService.setMesageStatus(acceptDto);
+            return ResponseEntity.ok().body(acceptDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("가입 승인을 실패하였습니다.");
         }
     }
+
+    //모임방 가입 거절
 
     @Operation(summary = "GET() /user/recommend/{userId}", description = "추천 모임방 조회")
     @Parameters({

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface UserMessageRepository extends JpaRepository<UserMessage, Long> {
     List<UserMessage> findByToId(long toId);
+    UserMessage findByMoimIdAndToIdAndType(long moimId, long toId, String type);
 }

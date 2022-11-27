@@ -92,6 +92,10 @@ public class MoimService {
         moimMemberRepository.save(moimMember);
     }
 
+    public UserMessage getMessageCheck(long moimId, long toId, String type) {
+        return userMessageRepository.findByMoimIdAndToIdAndType(moimId, toId, type);
+    }
+
     public void moimJoinMessage(JoinMoimDto joinMoimDto) {
         Optional<Moim> moim = moimRepository.findById(joinMoimDto.getMoimId());
         moim.ifPresent(selectedMoim -> {
@@ -100,6 +104,20 @@ public class MoimService {
             userMessage.setToId(selectedMoim.getUserId());
             userMessage.setMoimId(joinMoimDto.getMoimId());
             userMessage.setType("JOIN");
+            userMessage.setMessage(joinMoimDto.getMessage());
+            userMessage.setStatus((short) 0);
+            userMessageRepository.save(userMessage);
+        });
+    }
+
+    public void moimInviteMessage(JoinMoimDto joinMoimDto) {
+        Optional<Moim> moim = moimRepository.findById(joinMoimDto.getMoimId());
+        moim.ifPresent(selectedMoim -> {
+            UserMessage userMessage = new UserMessage();
+            userMessage.setFromId(selectedMoim.getUserId());
+            userMessage.setToId(joinMoimDto.getUserId());
+            userMessage.setMoimId(joinMoimDto.getMoimId());
+            userMessage.setType("INVITE");
             userMessage.setMessage(joinMoimDto.getMessage());
             userMessage.setStatus((short) 0);
             userMessageRepository.save(userMessage);
@@ -128,4 +146,5 @@ public class MoimService {
     public List<MoimMember> getMoimMembers(long moimId) {
         return moimMemberRepository.findByMoimId(moimId);
     }
+
 }
