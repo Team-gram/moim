@@ -1,6 +1,7 @@
 package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.*;
+import ajou.gram.moim.dto.AcceptDto;
 import ajou.gram.moim.dto.CreateRegularScheduleDto;
 import ajou.gram.moim.dto.JoinDto;
 import ajou.gram.moim.dto.KakaoDto;
@@ -89,6 +90,14 @@ public class UserService {
 
     public List<UserMessage> getMessages(long id) {
         return userMessageRepository.findByToId(id);
+    }
+
+    public void setMesageStatus(AcceptDto acceptDto) {
+        Optional<UserMessage> userMessage = userMessageRepository.findById(acceptDto.getMessageId());
+        userMessage.ifPresent(m -> {
+            m.setStatus((short) 1);
+            userMessageRepository.save(m);
+        });
     }
 
     public List<UserRegularSchedule> getUserRegularSchedule(long userId) {

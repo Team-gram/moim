@@ -129,6 +129,28 @@ public class MoimController {
         }
     }
 
+    @Operation(summary = "GET() /moim/message/check/{fromId}/{toId}/{type}", description = "모임방 가입/초대 메세지 중복 체크")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
+            @Parameter(name = "toId", description = "메세지 수신자 아이디(필수)", example = "1234567890"),
+            @Parameter(name = "type", description = "메세지 타입(필수)", example = "JOIN or INVITE")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임방 가입/초대 메세지 이력 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "이미 모임에 가입하였거나 메세지를 보낸 사용자 입니다.")
+    })
+    @GetMapping("/message/check/{moimId}/{toId}/{type}")
+    public ResponseEntity<?> getMessageCheck(@PathVariable("moimId") long moimId,
+                                             @PathVariable("toId") long toId,
+                                             @PathVariable("type") String type) {
+        UserMessage userMessage = moimService.getMessageCheck(moimId, toId, type);
+        if (userMessage == null) {
+            return ResponseEntity.ok().body(null);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 모임에 가입하였거나 메세지를 보낸 사용자 입니다.");
+        }
+    }
+
     @Operation(summary = "POST() /moim/pass", description = "모임방 가입 신청")
     @Parameters({
             @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1"),
@@ -146,6 +168,26 @@ public class MoimController {
             return ResponseEntity.ok().body(joinMoimDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("가입 신청을 실패하였습니다.");
+        }
+    }
+
+    @Operation(summary = "POST() /moim/invite", description = "모임방 초대")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1"),
+            @Parameter(name = "userId", description = "초대하고자 하는 유저 아이디(필수)", example = "2501238503"),
+            @Parameter(name = "message", description = "초대 메세지", example = "모임에 초대합니다~")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "초대 신청 성공", content = @Content(schema = @Schema(implementation = JoinMoimDto.class))),
+            @ApiResponse(responseCode = "400", description = "초대 신청 실패")
+    })
+    @PostMapping("/invite")
+    public ResponseEntity<?> moimInviteMessage(@RequestBody JoinMoimDto joinMoimDto) {
+        try {
+            moimService.moimInviteMessage(joinMoimDto);
+            return ResponseEntity.ok().body(joinMoimDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("초대 신청을 실패하였습니다.");
         }
     }
 
