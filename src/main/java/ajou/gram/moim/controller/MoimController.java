@@ -2,6 +2,7 @@ package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.*;
 import ajou.gram.moim.dto.*;
+import ajou.gram.moim.service.AwsS3Service;
 import ajou.gram.moim.service.MoimDetailService;
 import ajou.gram.moim.service.MoimService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MoimController {
 
     private final MoimService moimService;
+    private final AwsS3Service awsS3Service;
     private final MoimDetailService moimDetailService;
 
     @Operation(summary = "GET() /moim", description = "모임방 조회 & 검색")
@@ -74,16 +77,18 @@ public class MoimController {
             @Parameter(name = "dong", description = "동/읍/면(필수)", example = "삼성동"),
             @Parameter(name = "isPublish", description = "모임방 공개 여부(필수)", example = "Y / N"),
             @Parameter(name = "isFreeEnter", description = "자유 가입 여부(필수)", example = "Y / N"),
-            @Parameter(name = "maxMember", description = "모임방 최대 인원 수(필수)", example = "30")
+            @Parameter(name = "maxMember", description = "모임방 최대 인원 수(필수)", example = "30"),
+            @Parameter(name = "file", description = "모임방 썸네일 이미지", example = "1tn13n.jpg")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "모임방 개설 성공", content = @Content(schema = @Schema(implementation = CreateMoimDto.class))),
             @ApiResponse(responseCode = "400", description = "모임방 개설 실패")
     })
     @PostMapping("")
-    public ResponseEntity<?> addMoim(@RequestBody CreateMoimDto createMoimDto) {
+    public ResponseEntity<?> addMoim(@ModelAttribute CreateMoimDto createMoimDto, @RequestPart(value = "file") MultipartFile multipartFile) {
         try {
-            moimService.addMoim(createMoimDto);
+            String url = awsS3Service.uploadFileV1(multipartFile);
+            moimService.addMoim(createMoimDto, url);
             return ResponseEntity.ok().body(createMoimDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("모임방 개설에 실패하였습니다.");
@@ -102,7 +107,8 @@ public class MoimController {
             @Parameter(name = "dong", description = "동/읍/면", example = "삼성동"),
             @Parameter(name = "isPublish", description = "모임방 공개 여부", example = "Y / N"),
             @Parameter(name = "isFreeEnter", description = "자유 가입 여부", example = "Y / N"),
-            @Parameter(name = "maxMember", description = "모임방 최대 인원 수", example = "30")
+            @Parameter(name = "maxMember", description = "모임방 최대 인원 수", example = "30"),
+            @Parameter(name = "thumbnail", description = "모임방 썸네일 이미지", example = "1tn13n.jpg")
     })
     @PatchMapping("")
     public ResponseEntity<?> updateMoim(@RequestBody Moim moim) {

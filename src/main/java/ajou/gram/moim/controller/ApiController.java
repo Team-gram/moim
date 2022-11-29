@@ -1,15 +1,14 @@
 package ajou.gram.moim.controller;
 
+import ajou.gram.moim.service.AwsS3Service;
 import ajou.gram.moim.util.enumeration.EnumContract;
 import ajou.gram.moim.util.enumeration.EnumMapper;
 import ajou.gram.moim.util.enumeration.EnumValue;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ApiController {
 
+    private final AwsS3Service awsS3Service;
     private final EnumMapper enumMapper;
     @Operation(summary = "GET() /api/enum", description = "미구현")
     @GetMapping("/enum")
@@ -28,5 +28,11 @@ public class ApiController {
         Map<String, List<EnumValue>> enumValues = new LinkedHashMap<>();
         enumValues.put("joinStatus", enumMapper.toEnumValues(EnumContract.JoinStatus.class));
         return enumValues;
+    }
+
+    @PostMapping("/upload")
+    public String uploadFile(
+            @RequestPart(value = "file") MultipartFile multipartFile) {
+        return awsS3Service.uploadFileV1(multipartFile);
     }
 }
