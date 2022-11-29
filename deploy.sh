@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPOSITORY=/opt/server
+REPOSITORY=/home/ubuntu/moim
 cd $REPOSITORY
 
 APP_NAME=moim
