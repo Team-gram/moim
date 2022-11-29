@@ -148,4 +148,13 @@ public class MoimService {
         return moimMemberRepository.findByMoimId(moimId);
     }
 
+    public void updateMemberLevel(MoimMember moimMember) {
+        MoimMember m = moimMemberRepository.findOneByUserId(moimMember.getUserId());
+        m.setLevel(moimMember.getLevel());
+        moimMemberRepository.save(m);
+    }
+
+    public void banishMember(MoimMember moimMember) {
+        moimMemberRepository.deleteByMoimIdAndUserId(moimMember.getMoimId(), moimMember.getUserId());
+    }
 }
