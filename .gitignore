@@ -38,3 +38,6 @@ out/
 
 ### frontend ###
 /moim-frontend
+
+### aws ###
+**/src/main/resources/aws.yml
