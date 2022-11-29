@@ -330,4 +330,43 @@ public class MoimController {
         moimRegularSchedule.setMoimId(moimId);
         return ResponseEntity.ok().body(moimRegularSchedule);
     }
+
+    @Operation(summary = "POST() /moim/member/level", description = "모임원 등급 변경")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
+            @Parameter(name = "userId", description = "유저 아이디(필수)", example = "1234567890"),
+            @Parameter(name = "level", description = "유저 등급 (2: 방장, 1: 부방장, 0:일반 모임원", example = "0"),
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임원 등급 변경 성공", content = @Content(schema = @Schema(implementation = MoimMember.class))),
+            @ApiResponse(responseCode = "400", description = "모임원 등급 변경 실패")
+    })
+    @PatchMapping("/member/level")
+    public ResponseEntity<?> updateMemberLevel(@RequestBody MoimMember moimMember) {
+        try {
+            moimService.updateMemberLevel(moimMember);
+            return ResponseEntity.ok().body(moimMember);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("일정 등록에 실패하였습니다.");
+        }
+    }
+
+    @Operation(summary = "POST() /moim/member/banish", description = "모임원 강퇴")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
+            @Parameter(name = "userId", description = "강퇴할 유저 아이디(필수)", example = "1234567890")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임원 강퇴 성공", content = @Content(schema = @Schema(implementation = MoimMember.class))),
+            @ApiResponse(responseCode = "400", description = "모임원 강퇴 실패")
+    })
+    @PostMapping("/member/banish")
+    public ResponseEntity<?> banishMember(@RequestBody MoimMember moimMember) {
+        try {
+            moimService.banishMember(moimMember);
+            return ResponseEntity.ok().body(moimMember);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("일정 등록에 실패하였습니다.");
+        }
+    }
 }
