@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPOSITORY=/opt/moim
+REPOSITORY=/opt/server
 cd $REPOSITORY
 
 APP_NAME=action_codedeploy
