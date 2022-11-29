@@ -20,10 +20,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-          
-      - name: pwd
-        run: ls
-        shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -40,9 +36,9 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: $ {{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: AKIAQUWDM6Q4UMHTNKMD
+          aws-secret-access-key: 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
+          aws-region: ap-northeast-2
 
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://moim-bucket/$PROJECT_NAME/$GITHUB_SHA.zip
