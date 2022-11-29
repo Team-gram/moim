@@ -3,9 +3,9 @@ os: linux
 
 files:
   - source: /
-    destination: /opt/moim
+    destination: /opt/server
 permissions:
-  - object: /opt/moim/
+  - object: /opt/server/
     owner: ubuntu
     group: ubuntu
     mode: 755
