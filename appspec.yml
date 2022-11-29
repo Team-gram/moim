@@ -3,14 +3,15 @@ os: linux
 
 files:
   - source: /
-    destination: /opt/server
+    destination: /home/ubuntu/moim
+    overwrite: yes
 permissions:
-  - object: /opt/server/
+  - object: /
+    pattern: "**"
     owner: ubuntu
     group: ubuntu
-    mode: 755
 hooks:
   AfterInstall:
     - location: deploy.sh
       timeout: 60
-      runas: root
+      runas: ubuntu
