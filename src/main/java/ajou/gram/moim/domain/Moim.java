@@ -1,6 +1,7 @@
 package ajou.gram.moim.domain;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,4 +29,5 @@ public class Moim {
     private int maxMember;
     private Date createDate;
     private short moimLevel;
+    private String thumbnail;
 }

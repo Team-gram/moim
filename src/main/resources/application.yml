@@ -32,3 +32,22 @@ jwt:
   header: Authorization
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
   token-validity-in-seconds: 86400
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: AKIAQUWDM6Q4YZWS3246
+      secret-key: 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
+    s3:
+      bucket: moim-bucket
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error

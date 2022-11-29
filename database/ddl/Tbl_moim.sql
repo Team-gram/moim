@@ -12,4 +12,5 @@ CREATE TABLE `MoimPublic`.`moim` (
   `maxMember` INT NOT NULL,
   `createDate` DATETIME NOT NULL,
   `moimLevel` TINYINT(1) NOT NULL,
+  `thumbnail` VARCHAR(300) NULL,
   PRIMARY KEY (`id`));
