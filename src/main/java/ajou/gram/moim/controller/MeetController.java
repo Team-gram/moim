@@ -93,7 +93,7 @@ public class MeetController {
             @Parameter(name = "moimScheduleId", description = "모임 일정 아이디(필수)", example = "1")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "모임 일정 준비물 조회 성공", content = @Content(schema = @Schema(implementation = MoimScheduleReference.class)))
+            @ApiResponse(responseCode = "200", description = "모임 일정 준비물 조회 성공", content = @Content(schema = @Schema(implementation = MoimScheduleReferenceDto.class)))
     })
     @GetMapping("/ref/{moimId}/{moimScheduleId}")
     public ResponseEntity<?> getMoimScheduleReferences(@PathVariable("moimId") long moimId,

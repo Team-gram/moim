@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoimScheduleReferenceDto {
+    private long id;
     private long moimId;
     private long moimScheduleId;
     private long userId;
