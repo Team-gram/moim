@@ -41,6 +41,7 @@ public class MoimScheduleReferenceRepositoryQuery {
             moimScheduleReferenceDtos = new ArrayList<>();
             while(rs.next()) {
                 MoimScheduleReferenceDto moimScheduleReferenceDto = new MoimScheduleReferenceDto();
+                moimScheduleReferenceDto.setId(rs.getLong("id"));
                 moimScheduleReferenceDto.setMoimId(rs.getLong("moim_id"));
                 moimScheduleReferenceDto.setMoimScheduleId(rs.getLong("moim_schedule_id"));
                 moimScheduleReferenceDto.setUserId(rs.getLong("user_id"));
