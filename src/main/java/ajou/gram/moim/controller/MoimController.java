@@ -351,7 +351,7 @@ public class MoimController {
         }
     }
 
-    @Operation(summary = "POST() /moim/member/banish", description = "모임원 강퇴")
+    @Operation(summary = "DELETE() /moim/member/banish", description = "모임원 강퇴")
     @Parameters({
             @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
             @Parameter(name = "userId", description = "강퇴할 유저 아이디(필수)", example = "1234567890")
@@ -360,7 +360,7 @@ public class MoimController {
             @ApiResponse(responseCode = "200", description = "모임원 강퇴 성공", content = @Content(schema = @Schema(implementation = MoimMember.class))),
             @ApiResponse(responseCode = "400", description = "모임원 강퇴 실패")
     })
-    @PostMapping("/member/banish")
+    @DeleteMapping("/member/banish")
     public ResponseEntity<?> banishMember(@RequestBody MoimMember moimMember) {
         try {
             moimService.banishMember(moimMember);

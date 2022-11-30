@@ -21,7 +21,7 @@ public class MoimScheduleReferenceRepositoryQuery {
 
     public List<MoimScheduleReferenceDto> getMoimScheduleReferences(long moimId, long moimScheduleId) throws SQLException {
         String query =
-                "select moim_id, moim_schedule_id, user_id, name, (select name from user where user_id = id) user_name, status " +
+                "select id, moim_id, moim_schedule_id, user_id, name, (select name from user where user_id = id) user_name, status " +
                         "from moim_schedule_reference " +
                         "where moim_id = ? " +
                         "and moim_schedule_id = ?";
