@@ -5,6 +5,7 @@ import ajou.gram.moim.dto.*;
 import ajou.gram.moim.service.AwsS3Service;
 import ajou.gram.moim.service.MoimDetailService;
 import ajou.gram.moim.service.MoimService;
+import ajou.gram.moim.service.MoimUpperService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,6 +36,7 @@ public class MoimController {
     private final MoimService moimService;
     private final AwsS3Service awsS3Service;
     private final MoimDetailService moimDetailService;
+    private final MoimUpperService moimUpperService;
 
     @Operation(summary = "GET() /moim", description = "모임방 조회 & 검색")
     @Parameters({
@@ -368,5 +372,68 @@ public class MoimController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("일정 등록에 실패하였습니다.");
         }
+    }
+
+    @Operation(summary = "POST() /moim/upper", description = "상위노출 모임 신청")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
+            @Parameter(name = "period", description = "상위노출 기간(필수), 일 단위", example = "180 / 90 / 30"),
+            @Parameter(name = "money", description = "금액(필수)", example = "140000 / 70000 / 25000")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상위노출 모임 신청 성공", content = @Content(schema = @Schema(implementation = MoimUpperDto.class))),
+            @ApiResponse(responseCode = "400", description = "상위노출 모임 신청 실패")
+    })
+    @PostMapping("/upper")
+    public ResponseEntity<?> upperMoim(@RequestBody MoimUpperDto moimUpperDto) {
+        try {
+            boolean isAddPossible = moimUpperService.checkLimitUpperMoim(moimUpperDto);
+            if (isAddPossible) {
+                moimUpperService.addUpperMoim(moimUpperDto);
+                return ResponseEntity.ok().body(moimUpperDto);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("신청에 실패하였습니다. 관리자에게 문의해주세요.");
+            }
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("신청에 실패하였습니다.");
+        }
+    }
+
+    @Operation(summary = "POST() /moim/upper/history", description = "상위노출 모임 히스토리")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1")
+    })
+    @PostMapping("/upper/history")
+    public ResponseEntity<?> upperMoimHistory(@RequestBody MoimUpperDto moimUpperDto) {
+        moimUpperService.addUpperMoimHistory(moimUpperDto);
+        return ResponseEntity.ok().body("ok");
+    }
+
+    @Operation(summary = "GET() /moim/upper/{categoryId}", description = "상위노출 모임 리스트 조회")
+    @Parameters({
+            @Parameter(name = "categoryId", description = "카테고리 아이디(입력 안할시 랜덤으로 값 대입)", example = "1")
+    })
+    @GetMapping({"/upper/{categoryId}", "/upper"})
+    public ResponseEntity<?> getUpperMoims(@PathVariable(value = "categoryId", required = false) Integer categoryId) throws SQLException {
+        if (categoryId == null) {
+            double min = 19;
+            double max = 223;
+            double random = (int) ((Math.random() * (max - min)) + min);
+            categoryId = (int) random;
+        }
+
+        return ResponseEntity.ok().body(moimUpperService.getUpperMoims(categoryId));
+    }
+
+    @Operation(summary = "GET() /moim/upper/detail/{moimId}", description = "상위노출 상태 조회")
+    @Parameters({
+            @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상위노출 상태 조회 성공", content = @Content(schema = @Schema(implementation = MoimUpper.class)))
+    })
+    @GetMapping("/upper/detail/{moimId}")
+    public ResponseEntity<?> getUpperMoimStatus(@PathVariable("moimId") long moimId) {
+        return ResponseEntity.ok().body(moimUpperService.getUpperMoimStatus(moimId));
     }
 }

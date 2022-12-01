@@ -23,9 +23,10 @@ public class SpringConfig {
     private final CategoryRepository categoryRepository;
 
     private final MoimRepository moimRepository;
+    private final MoimUpperRepository moimUpperRepository;
+    private final MoimUpperHistoryRepository moimUpperHistoryRepository;
     private final MoimMemberRepository moimMemberRepository;
     private final MoimChatRepository moimChatRepository;
-    //private final MoimPlaceRepository moimPlaceRepository;
     private final MoimPlaceHistoryRepository moimPlaceHistoryRepository;
     private final MoimRegularScheduleRepository moimRegularScheduleRepository;
     private final MoimScheduleMemberRepository moimScheduleMemberRepository;
