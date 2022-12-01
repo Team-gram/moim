@@ -53,7 +53,7 @@ public class MoimUpperService {
 
     public boolean checkLimitUpperMoim(MoimUpperDto moimUpperDto) throws SQLException {
         int count = moimUpperRepositoryQuery.checkLimitUpperMoim(moimUpperDto);
-        return count >= 10 ? false : true;
+        return count >= 20 ? false : true;
     }
 
     public Optional<MoimUpper> getUpperMoimStatus(long moimId) {
