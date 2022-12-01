@@ -23,6 +23,7 @@ public class SpringConfig {
     private final CategoryRepository categoryRepository;
 
     private final MoimRepository moimRepository;
+    private final MoimPlaceUpperRepository moimPlaceUpperRepository;
     private final MoimUpperRepository moimUpperRepository;
     private final MoimUpperHistoryRepository moimUpperHistoryRepository;
     private final MoimMemberRepository moimMemberRepository;
@@ -31,12 +32,6 @@ public class SpringConfig {
     private final MoimRegularScheduleRepository moimRegularScheduleRepository;
     private final MoimScheduleMemberRepository moimScheduleMemberRepository;
     private final MoimScheduleReferenceRepository moimScheduleReferenceRepository;
-    @Bean
-    public EnumMapper enumMapper() {
-        EnumMapper enumMapper = new EnumMapper();
-        enumMapper.put("joinStatus", EnumContract.JoinStatus.class);
-        return enumMapper;
-    }
 
     @Bean
     public QuantitativeKPI quantitativeKPI() {

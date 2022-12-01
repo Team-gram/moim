@@ -116,7 +116,7 @@ public class MeetController {
         return ResponseEntity.ok().body("ok");
     }
 
-    @Operation(summary = "PATCH() /meet/ref", description = "모임 일정 준비물 챙기기")
+    @Operation(summary = "PUT() /meet/ref", description = "모임 일정 준비물 챙기기")
     @Parameters({
             @Parameter(name = "id", description = "준비물 아이디(필수)", example = "1"),
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "1234567890")
@@ -124,7 +124,7 @@ public class MeetController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "모임 일정 준비물 챙기기 성공")
     })
-    @PatchMapping("/ref")
+    @PutMapping("/ref")
     public ResponseEntity<?> updateMoimScheduleReference(@RequestBody MoimScheduleReference moimScheduleReference) {
         moimDetailService.updateMoimScheduleReference(moimScheduleReference);
         return ResponseEntity.ok().body("ok");
