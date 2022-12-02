@@ -53,15 +53,15 @@ public class MoimDetailService {
     public void updateMoimRegularSchedule(long moimId, long scheduleId, CreateMoimRegularScheduleDto createMoimRegularScheduleDto) {
         LocalTime startTime = LocalTime.parse(timeParse(createMoimRegularScheduleDto.getStartTime()));
         LocalTime endTime = LocalTime.parse(timeParse(createMoimRegularScheduleDto.getEndTime()));
-        MoimRegularSchedule moimRegularSchedule = new MoimRegularSchedule();
-        moimRegularSchedule.setId(scheduleId);
-        moimRegularSchedule.setMoimId(moimId);
-        moimRegularSchedule.setDay(createMoimRegularScheduleDto.getDay());
-        moimRegularSchedule.setStartTime(startTime);
-        moimRegularSchedule.setEndTime(endTime);
-        moimRegularSchedule.setScheduleName(createMoimRegularScheduleDto.getScheduleName());
-        moimRegularSchedule.setScheduleDetail(createMoimRegularScheduleDto.getScheduleDetail());
-        moimRegularScheduleRepository.save(moimRegularSchedule);
+        Optional<MoimRegularSchedule> optionalMoimRegularSchedule = moimRegularScheduleRepository.findById(scheduleId);
+        optionalMoimRegularSchedule.ifPresent(m -> {
+            m.setDay(createMoimRegularScheduleDto.getDay());
+            m.setStartTime(startTime);
+            m.setEndTime(endTime);
+            if (m.getScheduleName() != null) m.setScheduleName(createMoimRegularScheduleDto.getScheduleName());
+            if (m.getScheduleDetail() != null) m.setScheduleDetail(createMoimRegularScheduleDto.getScheduleDetail());
+            moimRegularScheduleRepository.save(m);
+        });
     }
 
     public void deleteMoimRegularSchedule(long moimId, long scheduleId) {
@@ -97,8 +97,13 @@ public class MoimDetailService {
     public void updateMoimScheduleReference(MoimScheduleReference moimScheduleReference) {
         Optional<MoimScheduleReference> moimScheduleReferenceOptional = moimScheduleReferenceRepository.findById(moimScheduleReference.getId());
         moimScheduleReferenceOptional.ifPresent(m -> {
-            m.setStatus("Y");
-            m.setUserId(moimScheduleReference.getUserId());
+            if (m.getStatus().equals("N")) {
+                m.setStatus("Y");
+                m.setUserId(moimScheduleReference.getUserId());
+            } else {
+                m.setStatus("N");
+                m.setUserId(0);
+            }
             moimScheduleReferenceRepository.save(m);
         });
     }

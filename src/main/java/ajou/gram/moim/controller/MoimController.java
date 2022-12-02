@@ -97,7 +97,7 @@ public class MoimController {
         }
     }
 
-    @Operation(summary = "PATCH() /moim", description = "모임방 정보 수정")
+    @Operation(summary = "PUT() /moim", description = "모임방 정보 수정")
     @Parameters({
             @Parameter(name = "id", description = "모임방 아이디(필수)", example = "1"),
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "1234567890"),
@@ -109,13 +109,24 @@ public class MoimController {
             @Parameter(name = "dong", description = "동/읍/면", example = "삼성동"),
             @Parameter(name = "isPublish", description = "모임방 공개 여부", example = "Y / N"),
             @Parameter(name = "isFreeEnter", description = "자유 가입 여부", example = "Y / N"),
-            @Parameter(name = "maxMember", description = "모임방 최대 인원 수", example = "30"),
-            @Parameter(name = "thumbnail", description = "모임방 썸네일 이미지", example = "1tn13n.jpg")
+            @Parameter(name = "maxMember", description = "모임방 최대 인원 수", example = "30")
     })
-    @PatchMapping("")
+    @PutMapping("")
     public ResponseEntity<?> updateMoim(@RequestBody Moim moim) {
         moimService.updateMoim(moim);
         return ResponseEntity.ok().body(moim);
+    }
+
+    @Operation(summary = "PUT() /moim/thumbnail/{moimId}", description = "모임방 썸네일 수정")
+    @Parameters({
+            @Parameter(name = "id", description = "모임방 아이디(필수)", example = "1"),
+            @Parameter(name = "thumbnail", description = "모임방 썸네일 이미지(필수)", example = "abc.jpg")
+    })
+    @PutMapping("/thumbnail/{moimId}")
+    public ResponseEntity<?> updateMoimThumbnail(@PathVariable("moimId") long moimId,
+                                                 @RequestPart("thumbnail") MultipartFile multipartFile) {
+        moimService.updateMoimThumbnail(moimId, multipartFile);
+        return ResponseEntity.ok().body("업데이트 성공");
     }
 
     @Operation(summary = "POST() /moim/free", description = "모임방 자유 가입")
@@ -216,10 +227,10 @@ public class MoimController {
             @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "모임방 채팅 조회 성공", content = @Content(schema = @Schema(implementation = MoimChat.class)))
+            @ApiResponse(responseCode = "200", description = "모임방 채팅 조회 성공", content = @Content(schema = @Schema(implementation = PrintChatDto.class)))
     })
     @GetMapping("/chat/{moimId}")
-    public ResponseEntity<List<MoimChat>> getMoimChats(@PathVariable("moimId") long moimId) {
+    public ResponseEntity<List<PrintChatDto>> getMoimChats(@PathVariable("moimId") long moimId) throws SQLException {
         return ResponseEntity.ok().body(moimService.getMoimChats(moimId));
     }
 
@@ -293,7 +304,7 @@ public class MoimController {
         }
     }
 
-    @Operation(summary = "PATCH() /moim/regular/{moimId}/{scheduleId}", description = "모임 정기 일정 수정")
+    @Operation(summary = "PUT() /moim/regular/{moimId}/{scheduleId}", description = "모임 정기 일정 수정")
     @Parameters({
             @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
             @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1"),
@@ -307,7 +318,7 @@ public class MoimController {
             @ApiResponse(responseCode = "200", description = "모임 정기 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateMoimRegularScheduleDto.class))),
             @ApiResponse(responseCode = "400", description = "모임 정기 일정 수정 실패")
     })
-    @PatchMapping("/regular/{moimId}/{scheduleId}")
+    @PutMapping("/regular/{moimId}/{scheduleId}")
     public ResponseEntity<?> updateMoimRegularSchedule(@PathVariable("moimId") long moimId,
                                                        @PathVariable("scheduleId") long scheduleId,
                                                        @RequestBody CreateMoimRegularScheduleDto createMoimRegularScheduleDto) {

@@ -4,11 +4,13 @@ import ajou.gram.moim.domain.*;
 import ajou.gram.moim.dto.ChatDto;
 import ajou.gram.moim.dto.CreateMoimDto;
 import ajou.gram.moim.dto.JoinMoimDto;
+import ajou.gram.moim.dto.PrintChatDto;
 import ajou.gram.moim.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,12 +22,15 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class MoimService {
+
+    private final AwsS3Service awsS3Service;
     private final CategoryRepositoryQuery categoryRepositoryQuery;
     private final UserCategoryRepository userCategoryRepository;
     private final MoimRepository moimRepository;
     private final MoimRepositoryQuery moimRepositoryQuery;
     private final MoimMemberRepository moimMemberRepository;
     private final MoimChatRepository moimChatRepository;
+    private final MoimChatRepositoryQuery moimChatRepositoryQuery;
     private final UserMessageRepository userMessageRepository;
 
     public List<Moim> getMoims(int categoryId, String sido, String sigungu, String dong, String title) {
@@ -87,6 +92,14 @@ public class MoimService {
         });
     }
 
+    public void updateMoimThumbnail(long moimId, MultipartFile multipartFile) {
+        moimRepository.findById(moimId).ifPresent(m -> {
+            String url = awsS3Service.uploadFileV1(multipartFile);
+            m.setThumbnail(url);
+            moimRepository.save(m);
+        });
+    }
+
     public void moimJoin(MoimMember moimMember) {
         moimMember.setRegisterDate(new Date());
         moimMember.setLevel((short) 2);
@@ -130,8 +143,8 @@ public class MoimService {
         return moimRepositoryQuery.getRecommendMoims(user, userCategories);
     }
 
-    public List<MoimChat> getMoimChats(long moimId) {
-        return moimChatRepository.findByMoimId(moimId);
+    public List<PrintChatDto> getMoimChats(long moimId) throws SQLException {
+        return moimChatRepositoryQuery.getMoimChats(moimId);
     }
 
     public void addChat(ChatDto chatDto) {
