@@ -80,6 +80,19 @@ public class PlaceController {
         return ResponseEntity.ok().body("ok");
     }
 
+    @Operation(summary = "DELETE() /place/{placeId}", description = "모임 장소 삭제")
+    @Parameters({
+            @Parameter(name = "placeId", description = "모임 일정 장소 아이디", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 장소 삭제 성공")
+    })
+    @DeleteMapping("/{placeId}")
+    public ResponseEntity<?> deleteMoimPlace(@PathVariable("placeId") long placeId) {
+        moimPlaceService.deleteMoimPlace(placeId);
+        return ResponseEntity.ok().body("ok");
+    }
+
     @Operation(summary = "GET() /place/recommend/{dong}/{categoryGroupName}", description = "추천 장소 조회")
     @Parameters({
             @Parameter(name = "sido", description = "시/도", example = "서울특별시"),

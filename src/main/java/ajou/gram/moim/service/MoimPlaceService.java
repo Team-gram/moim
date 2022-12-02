@@ -57,4 +57,8 @@ public class MoimPlaceService {
     public List<MoimPlace> getMoimPlaces(long moimId, long scheduleId) {
         return moimPlaceRepository.findByMoimIdAndScheduleId(moimId, scheduleId);
     }
+
+    public void deleteMoimPlace(long placeId) {
+        moimPlaceRepository.deleteById(placeId);
+    }
 }
