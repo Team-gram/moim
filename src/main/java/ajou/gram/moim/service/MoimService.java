@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class MoimService {
+
+    private final AwsS3Service awsS3Service;
     private final CategoryRepositoryQuery categoryRepositoryQuery;
     private final UserCategoryRepository userCategoryRepository;
     private final MoimRepository moimRepository;
@@ -85,6 +88,14 @@ public class MoimService {
             if (moim.getIsPublish() != null) m.setIsPublish(moim.getIsPublish());
             if (moim.getIsFreeEnter() != null) m.setIsFreeEnter(moim.getIsFreeEnter());
             if (moim.getMaxMember() != 0) m.setMaxMember(moim.getMaxMember());
+            moimRepository.save(m);
+        });
+    }
+
+    public void updateMoimThumbnail(long moimId, MultipartFile multipartFile) {
+        moimRepository.findById(moimId).ifPresent(m -> {
+            String url = awsS3Service.uploadFileV1(multipartFile);
+            m.setThumbnail(url);
             moimRepository.save(m);
         });
     }
