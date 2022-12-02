@@ -4,6 +4,7 @@ import ajou.gram.moim.domain.*;
 import ajou.gram.moim.dto.ChatDto;
 import ajou.gram.moim.dto.CreateMoimDto;
 import ajou.gram.moim.dto.JoinMoimDto;
+import ajou.gram.moim.dto.PrintChatDto;
 import ajou.gram.moim.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
@@ -26,6 +27,7 @@ public class MoimService {
     private final MoimRepositoryQuery moimRepositoryQuery;
     private final MoimMemberRepository moimMemberRepository;
     private final MoimChatRepository moimChatRepository;
+    private final MoimChatRepositoryQuery moimChatRepositoryQuery;
     private final UserMessageRepository userMessageRepository;
 
     public List<Moim> getMoims(int categoryId, String sido, String sigungu, String dong, String title) {
@@ -130,8 +132,8 @@ public class MoimService {
         return moimRepositoryQuery.getRecommendMoims(user, userCategories);
     }
 
-    public List<MoimChat> getMoimChats(long moimId) {
-        return moimChatRepository.findByMoimId(moimId);
+    public List<PrintChatDto> getMoimChats(long moimId) throws SQLException {
+        return moimChatRepositoryQuery.getMoimChats(moimId);
     }
 
     public void addChat(ChatDto chatDto) {

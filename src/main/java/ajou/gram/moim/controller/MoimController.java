@@ -216,10 +216,10 @@ public class MoimController {
             @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "모임방 채팅 조회 성공", content = @Content(schema = @Schema(implementation = MoimChat.class)))
+            @ApiResponse(responseCode = "200", description = "모임방 채팅 조회 성공", content = @Content(schema = @Schema(implementation = PrintChatDto.class)))
     })
     @GetMapping("/chat/{moimId}")
-    public ResponseEntity<List<MoimChat>> getMoimChats(@PathVariable("moimId") long moimId) {
+    public ResponseEntity<List<PrintChatDto>> getMoimChats(@PathVariable("moimId") long moimId) throws SQLException {
         return ResponseEntity.ok().body(moimService.getMoimChats(moimId));
     }
 
