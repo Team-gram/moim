@@ -53,15 +53,15 @@ public class MoimDetailService {
     public void updateMoimRegularSchedule(long moimId, long scheduleId, CreateMoimRegularScheduleDto createMoimRegularScheduleDto) {
         LocalTime startTime = LocalTime.parse(timeParse(createMoimRegularScheduleDto.getStartTime()));
         LocalTime endTime = LocalTime.parse(timeParse(createMoimRegularScheduleDto.getEndTime()));
-        MoimRegularSchedule moimRegularSchedule = new MoimRegularSchedule();
-        moimRegularSchedule.setId(scheduleId);
-        moimRegularSchedule.setMoimId(moimId);
-        moimRegularSchedule.setDay(createMoimRegularScheduleDto.getDay());
-        moimRegularSchedule.setStartTime(startTime);
-        moimRegularSchedule.setEndTime(endTime);
-        moimRegularSchedule.setScheduleName(createMoimRegularScheduleDto.getScheduleName());
-        moimRegularSchedule.setScheduleDetail(createMoimRegularScheduleDto.getScheduleDetail());
-        moimRegularScheduleRepository.save(moimRegularSchedule);
+        Optional<MoimRegularSchedule> optionalMoimRegularSchedule = moimRegularScheduleRepository.findById(scheduleId);
+        optionalMoimRegularSchedule.ifPresent(m -> {
+            m.setDay(createMoimRegularScheduleDto.getDay());
+            m.setStartTime(startTime);
+            m.setEndTime(endTime);
+            if (m.getScheduleName() != null) m.setScheduleName(createMoimRegularScheduleDto.getScheduleName());
+            if (m.getScheduleDetail() != null) m.setScheduleDetail(createMoimRegularScheduleDto.getScheduleDetail());
+            moimRegularScheduleRepository.save(m);
+        });
     }
 
     public void deleteMoimRegularSchedule(long moimId, long scheduleId) {

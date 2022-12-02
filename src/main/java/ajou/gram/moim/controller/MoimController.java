@@ -97,7 +97,7 @@ public class MoimController {
         }
     }
 
-    @Operation(summary = "PATCH() /moim", description = "모임방 정보 수정")
+    @Operation(summary = "PUT() /moim", description = "모임방 정보 수정")
     @Parameters({
             @Parameter(name = "id", description = "모임방 아이디(필수)", example = "1"),
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "1234567890"),
@@ -112,7 +112,7 @@ public class MoimController {
             @Parameter(name = "maxMember", description = "모임방 최대 인원 수", example = "30"),
             @Parameter(name = "thumbnail", description = "모임방 썸네일 이미지", example = "1tn13n.jpg")
     })
-    @PatchMapping("")
+    @PutMapping("")
     public ResponseEntity<?> updateMoim(@RequestBody Moim moim) {
         moimService.updateMoim(moim);
         return ResponseEntity.ok().body(moim);
@@ -293,7 +293,7 @@ public class MoimController {
         }
     }
 
-    @Operation(summary = "PATCH() /moim/regular/{moimId}/{scheduleId}", description = "모임 정기 일정 수정")
+    @Operation(summary = "PUT() /moim/regular/{moimId}/{scheduleId}", description = "모임 정기 일정 수정")
     @Parameters({
             @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
             @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1"),
@@ -307,7 +307,7 @@ public class MoimController {
             @ApiResponse(responseCode = "200", description = "모임 정기 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateMoimRegularScheduleDto.class))),
             @ApiResponse(responseCode = "400", description = "모임 정기 일정 수정 실패")
     })
-    @PatchMapping("/regular/{moimId}/{scheduleId}")
+    @PutMapping("/regular/{moimId}/{scheduleId}")
     public ResponseEntity<?> updateMoimRegularSchedule(@PathVariable("moimId") long moimId,
                                                        @PathVariable("scheduleId") long scheduleId,
                                                        @RequestBody CreateMoimRegularScheduleDto createMoimRegularScheduleDto) {

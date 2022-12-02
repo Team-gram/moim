@@ -135,7 +135,7 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "PATCH() /user/regular/{userId}/{scheduleId}", description = "개인 정기 일정 수정")
+    @Operation(summary = "PUT() /user/regular/{userId}/{scheduleId}", description = "개인 정기 일정 수정")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
             @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1"),
@@ -149,7 +149,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "개인 정기 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class))),
             @ApiResponse(responseCode = "400", description = "중복 일정이 존재하여 수정 실패")
     })
-    @PatchMapping("/regular/{userId}/{scheduleId}")
+    @PutMapping("/regular/{userId}/{scheduleId}")
     public ResponseEntity<?> updateUserRegularSchedule(@PathVariable("userId") long userId,
                                                        @PathVariable("scheduleId") long scheduleId,
                                                        @RequestBody CreateRegularScheduleDto createRegularScheduleDto) {
@@ -161,7 +161,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복된 일정입니다.");
     }
 
-    @Operation(summary = "PATCH() /user/irregular/{userId}/{scheduleId}", description = "개인 비정기 일정 수정")
+    @Operation(summary = "PUT() /user/irregular/{userId}/{scheduleId}", description = "개인 비정기 일정 수정")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "2506012341"),
             @Parameter(name = "scheduleId", description = "일정 아이디(필수)", example = "1"),
@@ -175,7 +175,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "개인 비정기 일정 수정 성공", content = @Content(schema = @Schema(implementation = UserIrregularSchedule.class))),
             @ApiResponse(responseCode = "400", description = "개인 비정기 일정 수정 실패")
     })
-    @PatchMapping("/irregular/{userId}/{scheduleId}")
+    @PutMapping("/irregular/{userId}/{scheduleId}")
     public ResponseEntity<?> updateUserIrregularSchedule(@PathVariable("userId") long userId,
                                                          @PathVariable("scheduleId") long scheduleId,
                                                          @RequestBody UserIrregularSchedule userIrregularSchedule) {

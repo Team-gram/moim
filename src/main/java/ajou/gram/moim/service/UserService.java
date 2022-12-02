@@ -132,21 +132,27 @@ public class UserService {
     public void updateUserRegularSchedule(long userId, long scheduleId, CreateRegularScheduleDto createRegularScheduleDto) {
         LocalTime startTime = LocalTime.parse(timeParse(createRegularScheduleDto.getStartTime()));
         LocalTime endTime = LocalTime.parse(timeParse(createRegularScheduleDto.getEndTime()));
-        UserRegularSchedule userRegularSchedule = new UserRegularSchedule();
-        userRegularSchedule.setId(scheduleId);
-        userRegularSchedule.setUserId(userId);
-        userRegularSchedule.setDay(createRegularScheduleDto.getDay());
-        userRegularSchedule.setStartTime(startTime);
-        userRegularSchedule.setEndTime(endTime);
-        userRegularSchedule.setTitle(createRegularScheduleDto.getTitle());
-        userRegularSchedule.setDetail(createRegularScheduleDto.getDetail());
-        userRegularScheduleRepository.save(userRegularSchedule);
+        Optional<UserRegularSchedule> optionalUserRegularSchedule = userRegularScheduleRepository.findById(scheduleId);
+        optionalUserRegularSchedule.ifPresent(m -> {
+            m.setDay(createRegularScheduleDto.getDay());
+            m.setStartTime(startTime);
+            m.setEndTime(endTime);
+            if(m.getTitle() != null) m.setTitle(createRegularScheduleDto.getTitle());
+            if(m.getDetail() != null) m.setDetail(createRegularScheduleDto.getDetail());
+            userRegularScheduleRepository.save(m);
+        });
     }
 
     public void updateUserIrregularSchedule(long userId, long scheduleId, UserIrregularSchedule userIrregularSchedule) {
-        userIrregularSchedule.setUserId(userId);
-        userIrregularSchedule.setId(scheduleId);
-        userIrregularScheduleRepository.save(userIrregularSchedule);
+        Optional<UserIrregularSchedule> optionalUserIrregularSchedule = userIrregularScheduleRepository.findById(scheduleId);
+        optionalUserIrregularSchedule.ifPresent(m -> {
+            m.setDate(userIrregularSchedule.getDate());
+            m.setStartTime(userIrregularSchedule.getStartTime());
+            m.setEndTime(userIrregularSchedule.getEndTime());
+            if (userIrregularSchedule.getTitle() != null) m.setTitle(userIrregularSchedule.getTitle());
+            if (userIrregularSchedule.getDetail() != null) m.setDetail(userIrregularSchedule.getDetail());
+            userIrregularScheduleRepository.save(m);
+        });
     }
 
     public void deleteUserRegularSchedule(long userId, long scheduleId) {
