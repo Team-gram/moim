@@ -109,13 +109,24 @@ public class MoimController {
             @Parameter(name = "dong", description = "동/읍/면", example = "삼성동"),
             @Parameter(name = "isPublish", description = "모임방 공개 여부", example = "Y / N"),
             @Parameter(name = "isFreeEnter", description = "자유 가입 여부", example = "Y / N"),
-            @Parameter(name = "maxMember", description = "모임방 최대 인원 수", example = "30"),
-            @Parameter(name = "thumbnail", description = "모임방 썸네일 이미지", example = "1tn13n.jpg")
+            @Parameter(name = "maxMember", description = "모임방 최대 인원 수", example = "30")
     })
     @PutMapping("")
     public ResponseEntity<?> updateMoim(@RequestBody Moim moim) {
         moimService.updateMoim(moim);
         return ResponseEntity.ok().body(moim);
+    }
+
+    @Operation(summary = "PUT() /moim/thumbnail/{moimId}", description = "모임방 썸네일 수정")
+    @Parameters({
+            @Parameter(name = "id", description = "모임방 아이디(필수)", example = "1"),
+            @Parameter(name = "thumbnail", description = "모임방 썸네일 이미지(필수)", example = "abc.jpg")
+    })
+    @PutMapping("/thumbnail/{moimId}")
+    public ResponseEntity<?> updateMoimThumbnail(@PathVariable("moimId") long moimId,
+                                                 @RequestPart("thumbnail") MultipartFile multipartFile) {
+        moimService.updateMoimThumbnail(moimId, multipartFile);
+        return ResponseEntity.ok().body("업데이트 성공");
     }
 
     @Operation(summary = "POST() /moim/free", description = "모임방 자유 가입")
