@@ -3,6 +3,7 @@ package ajou.gram.moim.dto;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -18,5 +19,5 @@ public class PrintChatDto {
     private String name;
     private String content;
     private int decoration;
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }

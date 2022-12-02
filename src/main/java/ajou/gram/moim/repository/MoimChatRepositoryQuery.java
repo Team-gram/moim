@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +47,7 @@ public class MoimChatRepositoryQuery {
                 printChatDto.setMoimId(rs.getLong("moim_id"));
                 printChatDto.setName(rs.getString("name"));
                 printChatDto.setUserId(rs.getLong("user_id"));
-                printChatDto.setCreatedAt(rs.getDate("createdAt"));
+                printChatDto.setCreatedAt(rs.getTimestamp("createdAt").toLocalDateTime());
                 printChatDto.setContent(rs.getString("content"));
                 printChatDto.setDecoration(rs.getInt("decoration"));
                 printChatDtos.add(printChatDto);
