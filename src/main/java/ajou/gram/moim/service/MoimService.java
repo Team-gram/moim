@@ -162,9 +162,11 @@ public class MoimService {
     }
 
     public void updateMemberLevel(MoimMember moimMember) {
-        MoimMember m = moimMemberRepository.findOneByUserId(moimMember.getUserId());
-        m.setLevel(moimMember.getLevel());
-        moimMemberRepository.save(m);
+        Optional<MoimMember> optionalMoimMember = moimMemberRepository.findByMoimIdAndUserId(moimMember.getMoimId(), moimMember.getUserId());
+        optionalMoimMember.ifPresent(m -> {
+            m.setLevel(moimMember.getLevel());
+            moimMemberRepository.save(m);
+        });
     }
 
     public void banishMember(MoimMember moimMember) {
