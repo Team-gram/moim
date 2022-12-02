@@ -97,8 +97,13 @@ public class MoimDetailService {
     public void updateMoimScheduleReference(MoimScheduleReference moimScheduleReference) {
         Optional<MoimScheduleReference> moimScheduleReferenceOptional = moimScheduleReferenceRepository.findById(moimScheduleReference.getId());
         moimScheduleReferenceOptional.ifPresent(m -> {
-            m.setStatus("Y");
-            m.setUserId(moimScheduleReference.getUserId());
+            if (m.getStatus().equals("N")) {
+                m.setStatus("Y");
+                m.setUserId(moimScheduleReference.getUserId());
+            } else {
+                m.setStatus("N");
+                m.setUserId(0);
+            }
             moimScheduleReferenceRepository.save(m);
         });
     }
