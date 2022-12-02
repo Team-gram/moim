@@ -46,7 +46,7 @@ public class MoimService {
         return moimRepository.findById(id);
     }
 
-    public void addMoim(CreateMoimDto createMoimDto, String url) {
+    public void addMoim(CreateMoimDto createMoimDto) {
         Moim moim = new Moim();
         moim.setUserId(createMoimDto.getUserId());
         moim.setCategoryId(createMoimDto.getCategoryId());
@@ -60,7 +60,7 @@ public class MoimService {
         moim.setMaxMember(createMoimDto.getMaxMember());
         moim.setCreateDate(new Date());
         moim.setMoimLevel((short) 0);
-        moim.setThumbnail(url);
+        moim.setThumbnail(null);
         Moim newMoim = moimRepository.save(moim);
 
         MoimMember moimMember = new MoimMember();
