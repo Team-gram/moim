@@ -86,4 +86,8 @@ public class MoimUpperService {
     public MoimPlaceUpper getUpperPlace(long userId) {
         return moimPlaceUpperRepository.findByUserId(userId);
     }
+
+    public List<MoimPlaceUpper> getAllUpperMoimPlace() {
+        return moimPlaceUpperRepository.findAll();
+    }
 }
