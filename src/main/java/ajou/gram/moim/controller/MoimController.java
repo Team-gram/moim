@@ -344,7 +344,7 @@ public class MoimController {
         return ResponseEntity.ok().body(moimRegularSchedule);
     }
 
-    @Operation(summary = "POST() /moim/member/level", description = "모임원 등급 변경")
+    @Operation(summary = "PUT() /moim/member/level", description = "모임원 등급 변경")
     @Parameters({
             @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "1234567890"),
@@ -354,7 +354,7 @@ public class MoimController {
             @ApiResponse(responseCode = "200", description = "모임원 등급 변경 성공", content = @Content(schema = @Schema(implementation = MoimMember.class))),
             @ApiResponse(responseCode = "400", description = "모임원 등급 변경 실패")
     })
-    @PatchMapping("/member/level")
+    @PutMapping("/member/level")
     public ResponseEntity<?> updateMemberLevel(@RequestBody MoimMember moimMember) {
         try {
             moimService.updateMemberLevel(moimMember);
