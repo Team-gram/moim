@@ -36,19 +36,19 @@ public class MoimRepositoryQuery {
 
         String query = "select m from moim m where 1=1 ";
 
-        if (categories.size() > 0) {
-            query += "and m.categoryId in (:categories) ";
-            for (Category c : categories) {
-                categoryIds.add(c.getCategoryId());
-            }
-            f_parent = true;
-        } else {
+//        if (categories.size() > 0) {
+//            query += "and m.categoryId in (:categories) ";
+//            for (Category c : categories) {
+//                categoryIds.add(c.getCategoryId());
+//            }
+//            f_parent = true;
+//        } else {
             if (categoryId == 0) {
                 query += "and m.categoryId >= :categoryId ";
             } else {
                 query += "and m.categoryId = :categoryId ";
             }
-        }
+//        }
 
         if (sido != null) {
             query += "and m.sido = :sido ";
