@@ -47,7 +47,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="#" class="brand-link">
+    <a href="/manage" class="brand-link">
       <span class="brand-text font-weight-light">moim <span  th:text="${session.email}"></span></span>
     </a>
 
@@ -60,25 +60,16 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
-          <th:block th:if="${session.email == null}">
-            <li class="nav-header">상위 노출 신청</li>
+          <th:block th:if="${session.email != null}">
+            <li class="nav-header">상위 노출</li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/manage/upper" class="nav-link">
                 <i class="nav-icon far fa-circle text-warning"></i>
                 <p class="text">업소</p>
               </a>
             </li>
           </th:block>
 
-          <th:block th:if="${session.email != null}">
-            <li class="nav-header">관리</li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon far fa-circle text-warning"></i>
-                <p class="text">업소</p>
-              </a>
-            </li>
-          </th:block>
         </ul>
       </nav>
     </div>

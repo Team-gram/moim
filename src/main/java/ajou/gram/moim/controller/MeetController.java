@@ -1,13 +1,12 @@
 package ajou.gram.moim.controller;
 
+import ajou.gram.moim.domain.MoimPlaceUpper;
 import ajou.gram.moim.domain.MoimRegularSchedule;
 import ajou.gram.moim.domain.MoimScheduleMember;
 import ajou.gram.moim.domain.MoimScheduleReference;
-import ajou.gram.moim.dto.JoinMoimScheduleDto;
-import ajou.gram.moim.dto.MoimMemberScheduleDto;
-import ajou.gram.moim.dto.MoimScheduleMemberDto;
-import ajou.gram.moim.dto.MoimScheduleReferenceDto;
+import ajou.gram.moim.dto.*;
 import ajou.gram.moim.service.MoimDetailService;
+import ajou.gram.moim.service.MoimUpperService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -18,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +31,7 @@ import java.sql.SQLException;
 public class MeetController {
 
     private final MoimDetailService moimDetailService;
+    private final MoimUpperService moimUpperService;
 
     @Operation(summary = "GET() /meet/{moimId}", description = "모임 일정 조율")
     @Parameters({
@@ -141,5 +142,45 @@ public class MeetController {
     public ResponseEntity<?> deleteMoimScheduleReference(@RequestBody MoimScheduleReference moimScheduleReference) {
         moimDetailService.deleteMoimScheduleReference(moimScheduleReference);
         return ResponseEntity.ok().body("ok");
+    }
+
+    @Operation(summary = "POST() /meet/upper", description = "상위노출 업소 등록")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디", example = "2358201983"),
+            @Parameter(name = "placeId", description = "사업자 등록번호", example = "110242317"),
+            @Parameter(name = "placeName", description = "업소 이름", example = "이디야커피"),
+            @Parameter(name = "categoryId", description = "카테고리 아이디", example = "1"),
+            @Parameter(name = "page", description = "업소 홈페이지", example = "http://naver.com"),
+            @Parameter(name = "crn", description = "사업자 등록증 이미지 파일", example = "crn.jpg"),
+            @Parameter(name = "sido", description = "시/도", example = "서울특별시"),
+            @Parameter(name = "sigungu", description = "시/군/구", example = "강남구"),
+            @Parameter(name = "dong", description = "동/읍/면", example = "삼성동"),
+            @Parameter(name = "period", description = "상위 노출 기간(일)", example = "30 / 90 / 180"),
+            @Parameter(name = "money", description = "가격", example = "20000 / 55000 / 10000")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상위노출 업소 등록 성공"),
+            @ApiResponse(responseCode = "400", description = "상위노출 업소 등록 실패")
+    })
+    @PostMapping("/upper")
+    public ResponseEntity<?> addUpperPlace(@ModelAttribute MoimPlaceUpperDto moimPlaceUpperDto) {
+        try {
+            moimUpperService.addUpperPlace(moimPlaceUpperDto);
+            return ResponseEntity.ok().body("ok");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("등록 실패");
+        }
+    }
+
+    @Operation(summary = "GET() /meet/upper/{userId}", description = "상위노출 업소 처리 상태 조회")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디", example = "110242317")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상위노출 업소 처리 상태 조회 성공", content = @Content(schema = @Schema(implementation = MoimPlaceUpper.class)))
+    })
+    @GetMapping("/upper/{userId}")
+    public ResponseEntity<?> getUpperPlace(@PathVariable("userId") long userId) {
+        return ResponseEntity.ok().body(moimUpperService.getUpperPlace(userId));
     }
 }
