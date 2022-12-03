@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class MoimPlaceUpperDto {
+    private long userId;
     private long placeId;   // 사업자 등록번호
     private String placeName;
     private int categoryId;

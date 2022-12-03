@@ -15,6 +15,8 @@ public class MoimPlaceUpper {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "user_id")
+    private long userId;
     @Column(name = "place_id")
     private long placeId;
     @Column(name = "place_name")

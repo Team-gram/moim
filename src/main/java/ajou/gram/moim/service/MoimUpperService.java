@@ -65,6 +65,7 @@ public class MoimUpperService {
         String url = awsS3Service.uploadFileV1(moimPlaceUpperDto.getCrn());
 
         MoimPlaceUpper moimPlaceUpper = MoimPlaceUpper.builder()
+                .userId(moimPlaceUpperDto.getUserId())
                 .placeId(moimPlaceUpperDto.getPlaceId())
                 .placeName(moimPlaceUpperDto.getPlaceName())
                 .categoryId(moimPlaceUpperDto.getCategoryId())
@@ -80,5 +81,9 @@ public class MoimUpperService {
                 .build();
 
         moimPlaceUpperRepository.save(moimPlaceUpper);
+    }
+
+    public MoimPlaceUpper getUpperPlace(long userId) {
+        return moimPlaceUpperRepository.findByUserId(userId);
     }
 }

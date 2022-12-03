@@ -1,5 +1,6 @@
 CREATE TABLE `MoimPublic`.`moim_place_upper` (
   `id` BIGINT(10) NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT(10) NOT NULL,
   `place_id` BIGINT(20) NOT NULL,
   `place_name` VARCHAR(200) NOT NULL,
   `category_id` INT NOT NULL,

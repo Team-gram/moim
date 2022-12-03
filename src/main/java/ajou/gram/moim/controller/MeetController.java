@@ -1,5 +1,6 @@
 package ajou.gram.moim.controller;
 
+import ajou.gram.moim.domain.MoimPlaceUpper;
 import ajou.gram.moim.domain.MoimRegularSchedule;
 import ajou.gram.moim.domain.MoimScheduleMember;
 import ajou.gram.moim.domain.MoimScheduleReference;
@@ -145,6 +146,7 @@ public class MeetController {
 
     @Operation(summary = "POST() /meet/upper", description = "상위노출 업소 등록")
     @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디", example = "2358201983"),
             @Parameter(name = "placeId", description = "사업자 등록번호", example = "110242317"),
             @Parameter(name = "placeName", description = "업소 이름", example = "이디야커피"),
             @Parameter(name = "categoryId", description = "카테고리 아이디", example = "1"),
@@ -168,5 +170,17 @@ public class MeetController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("등록 실패");
         }
+    }
+
+    @Operation(summary = "GET() /meet/upper/{userId}", description = "상위노출 업소 처리 상태 조회")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디", example = "110242317")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상위노출 업소 처리 상태 조회 성공", content = @Content(schema = @Schema(implementation = MoimPlaceUpper.class)))
+    })
+    @GetMapping("/upper/{userId}")
+    public ResponseEntity<?> getUpperPlace(@PathVariable("userId") long userId) {
+        return ResponseEntity.ok().body(moimUpperService.getUpperPlace(userId));
     }
 }
