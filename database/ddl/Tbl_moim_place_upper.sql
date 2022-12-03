@@ -10,6 +10,8 @@ CREATE TABLE `MoimPublic`.`moim_place_upper` (
   `dong` VARCHAR(200) NOT NULL,
   `period` INT NOT NULL,
   `money` INT NOT NULL,
-  `recStartDate` DATETIME NOT NULL,
-  `recEndDate` DATETIME NOT NULL,
+  `createDate` DATETIME NOT NULL,
+  `recStartDate` DATETIME NULL,
+  `recEndDate` DATETIME NULL,
+  `status` CHAR(1) NOT NULL,
   PRIMARY KEY (`id`));

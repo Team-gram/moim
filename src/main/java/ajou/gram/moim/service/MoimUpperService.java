@@ -1,14 +1,13 @@
 package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.Moim;
+import ajou.gram.moim.domain.MoimPlaceUpper;
 import ajou.gram.moim.domain.MoimUpper;
 import ajou.gram.moim.domain.MoimUpperHistory;
+import ajou.gram.moim.dto.MoimPlaceUpperDto;
 import ajou.gram.moim.dto.MoimUpperDto;
 import ajou.gram.moim.dto.MoimUpperPrintDto;
-import ajou.gram.moim.repository.MoimRepository;
-import ajou.gram.moim.repository.MoimUpperHistoryRepository;
-import ajou.gram.moim.repository.MoimUpperRepository;
-import ajou.gram.moim.repository.MoimUpperRepositoryQuery;
+import ajou.gram.moim.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +22,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MoimUpperService {
 
+    private final AwsS3Service awsS3Service;
     private final MoimRepository moimRepository;
     private final MoimUpperRepository moimUpperRepository;
     private final MoimUpperRepositoryQuery moimUpperRepositoryQuery;
     private final MoimUpperHistoryRepository moimUpperHistoryRepository;
+    private final MoimPlaceUpperRepository moimPlaceUpperRepository;
     public void addUpperMoim(MoimUpperDto moimUpperDto) {
         MoimUpper moimUpper = MoimUpper.builder()
                 .moimId(moimUpperDto.getMoimId())
@@ -58,5 +59,26 @@ public class MoimUpperService {
 
     public Optional<MoimUpper> getUpperMoimStatus(long moimId) {
         return moimUpperRepository.findByMoimId(moimId);
+    }
+
+    public void addUpperPlace(MoimPlaceUpperDto moimPlaceUpperDto) {
+        String url = awsS3Service.uploadFileV1(moimPlaceUpperDto.getCrn());
+
+        MoimPlaceUpper moimPlaceUpper = MoimPlaceUpper.builder()
+                .placeId(moimPlaceUpperDto.getPlaceId())
+                .placeName(moimPlaceUpperDto.getPlaceName())
+                .categoryId(moimPlaceUpperDto.getCategoryId())
+                .page(moimPlaceUpperDto.getPage())
+                .crn(url)
+                .sido(moimPlaceUpperDto.getSido())
+                .sigungu(moimPlaceUpperDto.getSigungu())
+                .dong(moimPlaceUpperDto.getDong())
+                .period(moimPlaceUpperDto.getPeriod())
+                .money(moimPlaceUpperDto.getMoney())
+                .createDate(LocalDateTime.now())
+                .status("-")
+                .build();
+
+        moimPlaceUpperRepository.save(moimPlaceUpper);
     }
 }
