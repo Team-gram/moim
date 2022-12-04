@@ -1,10 +1,7 @@
 package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.*;
-import ajou.gram.moim.dto.ChatDto;
-import ajou.gram.moim.dto.CreateMoimDto;
-import ajou.gram.moim.dto.JoinMoimDto;
-import ajou.gram.moim.dto.PrintChatDto;
+import ajou.gram.moim.dto.*;
 import ajou.gram.moim.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
@@ -171,5 +168,9 @@ public class MoimService {
 
     public void banishMember(MoimMember moimMember) {
         moimMemberRepository.deleteByMoimIdAndUserId(moimMember.getMoimId(), moimMember.getUserId());
+    }
+
+    public void leaveMoim(LeaveMoimDto leaveMoimDto) {
+        moimMemberRepository.deleteByMoimIdAndUserId(leaveMoimDto.getMoimId(), leaveMoimDto.getUserId());
     }
 }
