@@ -456,6 +456,12 @@ public class MoimController {
     })
     @DeleteMapping("/leave")
     public ResponseEntity<?> leaveMoim(@RequestBody LeaveMoimDto leaveMoimDto) {
-        moimService.leaveMoim(leaveMoimDto);
+        try {
+            moimService.leaveMoim(leaveMoimDto);
+            return ResponseEntity.ok().body("성공");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("실패");
+        }
+
     }
 }
