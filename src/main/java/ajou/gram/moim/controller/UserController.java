@@ -287,7 +287,28 @@ public class UserController {
         }
     }
 
-    //모임방 가입 거절
+    @Operation(summary = "POST() /user/message/reject", description = "모임방 가입 거절")
+    @Parameters({
+            @Parameter(name = "messageId", description = "메세지 아이디(필수)", example = "1"),
+            @Parameter(name = "moimId", description = "모임방 아이디(필수)", example = "1"),
+            @Parameter(name = "userId", description = "가입 거절할 유저 아이디(필수)", example = "2506012341")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "가입 거절 성공", content = @Content(schema = @Schema(implementation = AcceptDto.class))),
+            @ApiResponse(responseCode = "400", description = "가입 거절 실패")
+    })
+    @PostMapping("/message/reject")
+    public ResponseEntity<?> moimJoinReject(@RequestBody AcceptDto acceptDto) {
+        MoimMember moimMember = new MoimMember();
+        moimMember.setMoimId(acceptDto.getMoimId());
+        moimMember.setUserId(acceptDto.getUserId());
+        try {
+            userService.setMesageStatus(acceptDto);
+            return ResponseEntity.ok().body(acceptDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("가입 거절을 실패하였습니다.");
+        }
+    }
 
     @Operation(summary = "GET() /user/recommend/{userId}", description = "추천 모임방 조회")
     @Parameters({

@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserMessageRepository extends JpaRepository<UserMessage, Long> {
     List<UserMessage> findByToId(long toId);
     UserMessage findByMoimIdAndToIdAndType(long moimId, long toId, String type);
+
+    List<UserMessage> findByToIdAndStatus(long id, short status);
 }
