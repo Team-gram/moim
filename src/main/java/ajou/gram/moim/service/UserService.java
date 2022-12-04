@@ -89,7 +89,7 @@ public class UserService {
     }
 
     public List<UserMessage> getMessages(long id) {
-        return userMessageRepository.findByToId(id);
+        return userMessageRepository.findByToIdAndStatus(id, (short) 0);
     }
 
     public void setMesageStatus(AcceptDto acceptDto) {
