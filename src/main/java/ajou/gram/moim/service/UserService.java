@@ -1,10 +1,7 @@
 package ajou.gram.moim.service;
 
 import ajou.gram.moim.domain.*;
-import ajou.gram.moim.dto.AcceptDto;
-import ajou.gram.moim.dto.CreateRegularScheduleDto;
-import ajou.gram.moim.dto.JoinDto;
-import ajou.gram.moim.dto.KakaoDto;
+import ajou.gram.moim.dto.*;
 import ajou.gram.moim.repository.*;
 import ajou.gram.moim.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,6 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final AwsS3Service awsS3Service;
     private final UserRepository userRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final UserMessageRepository userMessageRepository;
@@ -182,5 +181,31 @@ public class UserService {
             minute = "0" + minute;
         }
         return hour + ":" + minute;
+    }
+
+    public void updateUser(UserUpdateDto userUpdateDto) {
+        Optional<User> user = userRepository.findById(userUpdateDto.getId());
+        user.ifPresent(m -> {
+            m.setName(userUpdateDto.getName());
+            m.setSido(userUpdateDto.getSido());
+            m.setSigungu(userUpdateDto.getSigungu());
+            m.setDong(userUpdateDto.getDong());
+            m.setDetail(userUpdateDto.getDetail());
+            m.setIsPublish(userUpdateDto.getIsPublish());
+        });
+
+        userCategoryRepository.deleteByUserId(userUpdateDto.getId());
+        for (int i=0; i<userUpdateDto.getCategories().size(); i++) {
+            UserCategory category = new UserCategory(userUpdateDto.getId(), userUpdateDto.getCategories().get(i), (short) 1);
+            userCategoryRepository.save(category);
+        }
+    }
+
+    public void updateUserThumbnail(long userId, MultipartFile multipartFile) {
+        userRepository.findById(userId).ifPresent(m -> {
+            String url = awsS3Service.uploadFileV1(multipartFile);
+            m.setProfileImage(url);
+            userRepository.save(m);
+        });
     }
 }

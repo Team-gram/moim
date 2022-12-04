@@ -445,4 +445,23 @@ public class MoimController {
     public ResponseEntity<?> getUpperMoimStatus(@PathVariable("moimId") long moimId) {
         return ResponseEntity.ok().body(moimUpperService.getUpperMoimStatus(moimId));
     }
+
+    @Operation(summary = "DELETE() /moim/leave", description = "모임 탈퇴")
+    @Parameters({
+            @Parameter(name = "userId", description = "유저 아이디", example = "123123123"),
+            @Parameter(name = "moimId", description = "모임 아이디", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 탈퇴 성공")
+    })
+    @DeleteMapping("/leave")
+    public ResponseEntity<?> leaveMoim(@RequestBody LeaveMoimDto leaveMoimDto) {
+        try {
+            moimService.leaveMoim(leaveMoimDto);
+            return ResponseEntity.ok().body("성공");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("실패");
+        }
+
+    }
 }
