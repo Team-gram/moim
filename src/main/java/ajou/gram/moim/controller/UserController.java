@@ -1,10 +1,7 @@
 package ajou.gram.moim.controller;
 
 import ajou.gram.moim.domain.*;
-import ajou.gram.moim.dto.AcceptDto;
-import ajou.gram.moim.dto.CreateRegularScheduleDto;
-import ajou.gram.moim.dto.JoinMoimDto;
-import ajou.gram.moim.dto.RecommendMoimDto;
+import ajou.gram.moim.dto.*;
 import ajou.gram.moim.service.MoimService;
 import ajou.gram.moim.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -330,5 +328,34 @@ public class UserController {
         });
 
         return ResponseEntity.ok().body(jsonObject);
+    }
+
+    @Operation(summary = "PUT() /user", description = "유저 정보 수정")
+    @Parameters({
+            @Parameter(name = "id", description = "유저 아이디(필수)", example = "1"),
+            @Parameter(name = "name", description = "유저 이름(필수)", example = "1234567890"),
+            @Parameter(name = "sido", description = "시/도", example = "서울특별시"),
+            @Parameter(name = "sigungu", description = "시/군/구", example = "강남시"),
+            @Parameter(name = "dong", description = "동/읍/면", example = "삼성동"),
+            @Parameter(name = "detail", description = "모임방 공개 여부", example = "Y / N"),
+            @Parameter(name = "isPublish", description = "자유 가입 여부", example = "Y / N"),
+            @Parameter(name = "categories", description = "카테고리", example = "[1, 2, 3]")
+    })
+    @PutMapping("")
+    public ResponseEntity<?> updateUser(@RequestBody UserUpdateDto userUpdateDto) {
+        userService.updateUser(userUpdateDto);
+        return ResponseEntity.ok().body(userUpdateDto);
+    }
+
+    @Operation(summary = "PUT() /user/thumbnail/{userId}", description = "유저 썸네일 수정")
+    @Parameters({
+            @Parameter(name = "id", description = "유저 아이디(필수)", example = "1231231231"),
+            @Parameter(name = "thumbnail", description = "유저 썸네일 이미지(필수)", example = "abc.jpg")
+    })
+    @PutMapping("/thumbnail/{userId}")
+    public ResponseEntity<?> updateUserThumbnail(@PathVariable("userId") long userId,
+                                                 @RequestPart("thumbnail") MultipartFile multipartFile) {
+        userService.updateUserThumbnail(userId, multipartFile);
+        return ResponseEntity.ok().body("업데이트 성공");
     }
 }
