@@ -11,7 +11,6 @@ public class RecommendPlaceDto {
 
     private long addressId;
     private String placeName;
-    private String categoryGroupName;
     private String sido;
     private String sigungu;
     private String dong;

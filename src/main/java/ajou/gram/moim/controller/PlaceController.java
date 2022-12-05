@@ -93,19 +93,17 @@ public class PlaceController {
         return ResponseEntity.ok().body("ok");
     }
 
-    @Operation(summary = "GET() /place/recommend/{dong}/{categoryGroupName}", description = "추천 장소 조회")
+    @Operation(summary = "GET() /place/recommend/{sido}/{sigungu}", description = "추천 장소 조회")
     @Parameters({
             @Parameter(name = "sido", description = "시/도", example = "서울특별시"),
-            @Parameter(name = "sigungu", description = "시/군/구", example = "강남구"),
-            @Parameter(name = "categoryGroupName", description = "장소 카테고리", example = "음식점")
+            @Parameter(name = "sigungu", description = "시/군/구", example = "강남구")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "추천 장소 조회 성공", content = @Content(schema = @Schema(implementation = RecommendPlaceDto.class)))
     })
-    @GetMapping("/recommend/{sido}/{sigungu}/{categoryGroupName}")
+    @GetMapping("/recommend/{sido}/{sigungu}")
     public ResponseEntity<?> getRecommendPlaces(@PathVariable("sido") String sido,
-                                                @PathVariable("sigungu") String sigungu,
-                                                @PathVariable("categoryGroupName") String categoryGroupName) throws SQLException {
-        return ResponseEntity.ok().body(moimPlaceService.getRecommendPlaces(sido, sigungu, categoryGroupName));
+                                                @PathVariable("sigungu") String sigungu) throws SQLException {
+        return ResponseEntity.ok().body(moimPlaceService.getRecommendPlaces(sido, sigungu));
     }
 }
