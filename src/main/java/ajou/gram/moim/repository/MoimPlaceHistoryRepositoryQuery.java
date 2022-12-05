@@ -20,14 +20,13 @@ public class MoimPlaceHistoryRepositoryQuery {
 
     private final DataSource dataSource;
 
-    public List<RecommendPlaceDto> getRecommendPlaces(String sido, String sigungu, String categoryGroupName) throws SQLException {
+    public List<RecommendPlaceDto> getRecommendPlaces(String sido, String sigungu) throws SQLException {
         String query =
-                "select address_id, place_name, category_group_name, sido, sigungu, dong " +
+                "select address_id, place_name, sido, sigungu, dong " +
                 "from moim_place_history " +
-                "where category_group_name = ? " +
-                "and sido = ? " +
-                "and sigungu = ? " +
-                "group by address_id, place_name, category_group_name, sido, sigungu, dong " +
+                "where sido like ? " +
+                "and sigungu like ? " +
+                "group by address_id, place_name, sido, sigungu, dong " +
                 "order by count(address_id) desc";
 
         Connection conn = null;
@@ -38,9 +37,8 @@ public class MoimPlaceHistoryRepositoryQuery {
         try {
             conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, categoryGroupName);
-            pstmt.setString(2, sido);
-            pstmt.setString(3, sigungu);
+            pstmt.setString(1, "%" + sido + "%");
+            pstmt.setString(2, "%" + sigungu + "%");
             rs = pstmt.executeQuery();
 
             recommendPlaceDtos = new ArrayList<>();
@@ -48,7 +46,6 @@ public class MoimPlaceHistoryRepositoryQuery {
                 RecommendPlaceDto recommendPlaceDto = new RecommendPlaceDto();
                 recommendPlaceDto.setAddressId(rs.getLong("address_id"));
                 recommendPlaceDto.setPlaceName(rs.getString("place_name"));
-                recommendPlaceDto.setCategoryGroupName(rs.getString("category_group_name"));
                 recommendPlaceDto.setSido(rs.getString("sido"));
                 recommendPlaceDto.setSigungu(rs.getString("sigungu"));
                 recommendPlaceDto.setDong(rs.getString("dong"));

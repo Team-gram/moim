@@ -36,8 +36,8 @@ public class MoimPlaceService {
         moimPlaceHistoryRepository.save(moimPlaceHistory);
     }
 
-    public List<RecommendPlaceDto> getRecommendPlaces(String sido, String sigungu, String categoryGroupName) throws SQLException {
-        return moimPlaceHistoryRepositoryQuery.getRecommendPlaces(sido, sigungu, categoryGroupName);
+    public List<RecommendPlaceDto> getRecommendPlaces(String sido, String sigungu) throws SQLException {
+        return moimPlaceHistoryRepositoryQuery.getRecommendPlaces(sido, sigungu);
     }
 
     public void addMoimPlace(MoimPlaceDto moimPlaceDto) {
