@@ -183,4 +183,17 @@ public class MeetController {
     public ResponseEntity<?> getUpperPlace(@PathVariable("userId") long userId) {
         return ResponseEntity.ok().body(moimUpperService.getUpperPlace(userId));
     }
+
+    @Operation(summary = "POST() /meet/upper/history", description = "상위노출 업소 히스토리 등록")
+    @Parameters({
+            @Parameter(name = "placeUpperId", description = "상위노출 업소 아이디", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상위노출 업소 히스토리 등록 성공")
+    })
+    @PostMapping("/upper/history")
+    public ResponseEntity<?> addUpperPlaceHistory(@RequestBody PlaceUpperHistoryDto placeUpperHistoryDto) {
+        moimUpperService.addUpperPlaceHistory(placeUpperHistoryDto);
+        return ResponseEntity.ok().body("ok");
+    }
 }

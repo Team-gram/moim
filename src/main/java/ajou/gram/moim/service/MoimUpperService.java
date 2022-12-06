@@ -1,12 +1,10 @@
 package ajou.gram.moim.service;
 
-import ajou.gram.moim.domain.Moim;
-import ajou.gram.moim.domain.MoimPlaceUpper;
-import ajou.gram.moim.domain.MoimUpper;
-import ajou.gram.moim.domain.MoimUpperHistory;
+import ajou.gram.moim.domain.*;
 import ajou.gram.moim.dto.MoimPlaceUpperDto;
 import ajou.gram.moim.dto.MoimUpperDto;
 import ajou.gram.moim.dto.MoimUpperPrintDto;
+import ajou.gram.moim.dto.PlaceUpperHistoryDto;
 import ajou.gram.moim.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +26,7 @@ public class MoimUpperService {
     private final MoimUpperRepositoryQuery moimUpperRepositoryQuery;
     private final MoimUpperHistoryRepository moimUpperHistoryRepository;
     private final MoimPlaceUpperRepository moimPlaceUpperRepository;
+    private final MoimPlaceUpperHistoryRepository moimPlaceUpperHistoryRepository;
     public void addUpperMoim(MoimUpperDto moimUpperDto) {
         MoimUpper moimUpper = MoimUpper.builder()
                 .moimId(moimUpperDto.getMoimId())
@@ -89,5 +88,13 @@ public class MoimUpperService {
 
     public List<MoimPlaceUpper> getAllUpperMoimPlace() {
         return moimPlaceUpperRepository.findAll();
+    }
+
+    public void addUpperPlaceHistory(PlaceUpperHistoryDto placeUpperHistoryDto) {
+        MoimPlaceUpperHistory moimPlaceUpperHistory = MoimPlaceUpperHistory.builder()
+                .placeUpperId(placeUpperHistoryDto.getPlaceUpperId())
+                .build();
+
+        moimPlaceUpperHistoryRepository.save(moimPlaceUpperHistory);
     }
 }
