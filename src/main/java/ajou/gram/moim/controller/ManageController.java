@@ -2,6 +2,7 @@ package ajou.gram.moim.controller;
 
 import ajou.gram.moim.service.MoimUpperService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,5 +52,17 @@ public class ManageController {
         modelAndView.addObject("places", moimUpperService.getAllUpperMoimPlace());
         modelAndView.setViewName("upper");
         return modelAndView;
+    }
+
+    @ResponseBody
+    @PostMapping("/accept")
+    public ResponseEntity<?> upperAccept() {
+        return ResponseEntity.ok().body("");
+    }
+
+    @ResponseBody
+    @PostMapping("/reject")
+    public ResponseEntity<?> upperReject() {
+        return ResponseEntity.ok().body("");
     }
 }
