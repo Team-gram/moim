@@ -97,4 +97,20 @@ public class MoimUpperService {
 
         moimPlaceUpperHistoryRepository.save(moimPlaceUpperHistory);
     }
+
+    public void upperAccept(long id) {
+        moimPlaceUpperRepository.findById(id).ifPresent(m -> {
+            m.setRecStartDate(LocalDateTime.now());
+            m.setRecEndDate(LocalDateTime.now().plusDays(m.getPeriod()));
+            m.setStatus("Y");
+            moimPlaceUpperRepository.save(m);
+        });
+    }
+
+    public void upperReject(long id) {
+        moimPlaceUpperRepository.findById(id).ifPresent(m -> {
+            m.setStatus("N");
+            moimPlaceUpperRepository.save(m);
+        });
+    }
 }

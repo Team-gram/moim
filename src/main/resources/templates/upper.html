@@ -125,8 +125,10 @@
                     <td th:text="${place.recEndDate}"></td>
                     <td th:text="${place.status}"></td>
                     <td>
-                        <button onclick="confirm()">승인</button>
-                        <button onclick="reject()">반려</button>
+                        <button th:if="${place.status == '-'}" th:onclick="'javascript:confirm(' + ${place.id} + ');'">승인</button>
+                        <button th:if="${place.status == '-'}" th:onclick="'javascript:reject(' + ${place.id} + ');'">반려</button>
+                        <div th:if="${place.status == 'Y'}">승인됨</div>
+                        <div th:if="${place.status == 'N'}">반려됨</div>
                     </td>
                 </tr>
             </table>
@@ -145,12 +147,38 @@
     </aside>
 </div>
 <script>
-    function confirm() {
-        console.log('confirm');
+    function confirm(id) {
+        $.ajax({
+            url: "/manage/accept",
+            async: true,
+            data: JSON.stringify({
+             id: id
+            }),
+            method: "POST",
+            contentType: "application/json"
+        }).done(function(data) {
+            console.log(data);
+        }).fail(function(xhr, status, errorThrown) {
+            console.log("오류명: " + errorThrown)
+            console.log("상태: " + status);
+        })
     }
 
-    function reject() {
-        console.log('reject');
+    function reject(id) {
+        $.ajax({
+            url: "/manage/reject",
+            async: true,
+            data: JSON.stringify({
+             id: id
+            }),
+            method: "POST",
+            contentType: "application/json"
+        }).done(function(data) {
+            console.log(data);
+        }).fail(function(xhr, status, errorThrown) {
+            console.log("오류명: " + errorThrown)
+            console.log("상태: " + status);
+        })
     }
 </script>
 </body>

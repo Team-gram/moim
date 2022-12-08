@@ -1,5 +1,6 @@
 package ajou.gram.moim.controller;
 
+import ajou.gram.moim.dto.LoginDto;
 import ajou.gram.moim.service.MoimUpperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -54,15 +55,15 @@ public class ManageController {
         return modelAndView;
     }
 
-    @ResponseBody
     @PostMapping("/accept")
-    public ResponseEntity<?> upperAccept() {
-        return ResponseEntity.ok().body("");
+    public ResponseEntity<?> upperAccept(@RequestBody LoginDto loginDto) {
+        moimUpperService.upperAccept(loginDto.getId());
+        return ResponseEntity.ok().body("Y");
     }
 
-    @ResponseBody
     @PostMapping("/reject")
-    public ResponseEntity<?> upperReject() {
-        return ResponseEntity.ok().body("");
+    public ResponseEntity<?> upperReject(@RequestBody LoginDto loginDto) {
+        moimUpperService.upperReject(loginDto.getId());
+        return ResponseEntity.ok().body("N");
     }
 }
