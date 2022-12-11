@@ -38,6 +38,12 @@ public class MoimUpperService {
                 .build();
 
         moimUpperRepository.save(moimUpper);
+
+        MoimUpperHistory moimUpperHistory = MoimUpperHistory.builder()
+                .moimId(moimUpper.getMoimId())
+                .build();
+
+        moimUpperHistoryRepository.save(moimUpperHistory);
     }
 
     public void addUpperMoimHistory(MoimUpperDto moimUpperDto) {
