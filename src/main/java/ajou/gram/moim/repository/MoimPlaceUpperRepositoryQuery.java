@@ -26,6 +26,7 @@ public class MoimPlaceUpperRepositoryQuery {
                 "inner join moim_place_upper_history on moim_place_upper.id = moim_place_upper_history.place_upper_id " +
                 "where recStartDate < current_timestamp() " +
                 "and current_timestamp() < recEndDate " +
+                "and status = 'Y' " +
                 "and category_id = ? " +
                 "group by moim_place_upper_history.place_upper_id " +
                 "order by count(moim_place_upper_history.place_upper_id) asc " +
