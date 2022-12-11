@@ -26,6 +26,7 @@ public class MoimUpperService {
     private final MoimUpperRepositoryQuery moimUpperRepositoryQuery;
     private final MoimUpperHistoryRepository moimUpperHistoryRepository;
     private final MoimPlaceUpperRepository moimPlaceUpperRepository;
+    private final MoimPlaceUpperRepositoryQuery moimPlaceUpperRepositoryQuery;
     private final MoimPlaceUpperHistoryRepository moimPlaceUpperHistoryRepository;
     public void addUpperMoim(MoimUpperDto moimUpperDto) {
         MoimUpper moimUpper = MoimUpper.builder()
@@ -82,7 +83,7 @@ public class MoimUpperService {
         moimPlaceUpperRepository.save(moimPlaceUpper);
     }
 
-    public MoimPlaceUpper getUpperPlace(long userId) {
+    public MoimPlaceUpper getUpperPlaceStatus(long userId) {
         return moimPlaceUpperRepository.findByUserId(userId);
     }
 
@@ -104,6 +105,10 @@ public class MoimUpperService {
             m.setRecEndDate(LocalDateTime.now().plusDays(m.getPeriod()));
             m.setStatus("Y");
             moimPlaceUpperRepository.save(m);
+            MoimPlaceUpperHistory moimPlaceUpperHistory = MoimPlaceUpperHistory.builder()
+                    .placeUpperId(id)
+                    .build();
+            moimPlaceUpperHistoryRepository.save(moimPlaceUpperHistory);
         });
     }
 
@@ -112,5 +117,9 @@ public class MoimUpperService {
             m.setStatus("N");
             moimPlaceUpperRepository.save(m);
         });
+    }
+
+    public List<MoimPlaceUpper> getUpperPlaces(long categoryId) throws SQLException {
+        return moimPlaceUpperRepositoryQuery.findByCategoryId(categoryId);
     }
 }
