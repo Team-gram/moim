@@ -172,16 +172,16 @@ public class MeetController {
         }
     }
 
-    @Operation(summary = "GET() /meet/upper/{userId}", description = "상위노출 업소 처리 상태 조회")
+    @Operation(summary = "GET() /meet/upper/status/{userId}", description = "상위노출 업소 처리 상태 조회")
     @Parameters({
             @Parameter(name = "userId", description = "유저 아이디", example = "110242317")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "상위노출 업소 처리 상태 조회 성공", content = @Content(schema = @Schema(implementation = MoimPlaceUpper.class)))
     })
-    @GetMapping("/upper/{userId}")
-    public ResponseEntity<?> getUpperPlace(@PathVariable("userId") long userId) {
-        return ResponseEntity.ok().body(moimUpperService.getUpperPlace(userId));
+    @GetMapping("/upper/status/{userId}")
+    public ResponseEntity<?> getUpperPlaceStatus(@PathVariable("userId") long userId) {
+        return ResponseEntity.ok().body(moimUpperService.getUpperPlaceStatus(userId));
     }
 
     @Operation(summary = "POST() /meet/upper/history", description = "상위노출 업소 히스토리 등록")
@@ -195,5 +195,17 @@ public class MeetController {
     public ResponseEntity<?> addUpperPlaceHistory(@RequestBody PlaceUpperHistoryDto placeUpperHistoryDto) {
         moimUpperService.addUpperPlaceHistory(placeUpperHistoryDto);
         return ResponseEntity.ok().body("ok");
+    }
+
+    @Operation(summary = "GET() /meet/upper/{categoryId}", description = "상위노출 업소 조회")
+    @Parameters({
+            @Parameter(name = "categoryId", description = "카테고리 아이디", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상위노출 업소 조회 성공", content = @Content(schema = @Schema(implementation = MoimPlaceUpper.class)))
+    })
+    @GetMapping("/upper/{categoryId}")
+    public ResponseEntity<?> getUpperPlaces(@PathVariable("categoryId") long categoryId) throws SQLException {
+        return ResponseEntity.ok().body(moimUpperService.getUpperPlaces(categoryId));
     }
 }

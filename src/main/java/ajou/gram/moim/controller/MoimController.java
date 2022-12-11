@@ -348,7 +348,7 @@ public class MoimController {
     @Parameters({
             @Parameter(name = "moimId", description = "모임 아이디(필수)", example = "1"),
             @Parameter(name = "userId", description = "유저 아이디(필수)", example = "1234567890"),
-            @Parameter(name = "level", description = "유저 등급 (2: 방장, 1: 부방장, 0:일반 모임원", example = "0"),
+            @Parameter(name = "level", description = "유저 등급 (0: 방장, 1: 부방장, 2:일반 모임원", example = "0"),
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "모임원 등급 변경 성공", content = @Content(schema = @Schema(implementation = MoimMember.class))),
