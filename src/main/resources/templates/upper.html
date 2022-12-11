@@ -110,7 +110,7 @@
                     <th>처리상태</th>
                     <th>처리</th>
                 </tr>
-                <tr th:each="place : ${places}">
+                <tr th:each="place, index : ${places}">
                     <td th:text="${place.id}"></td>
                     <td th:text="${place.userId}"></td>
                     <td th:text="${place.placeId}"></td>
@@ -123,10 +123,10 @@
                     <td th:text="${place.createDate}"></td>
                     <td th:text="${place.recStartDate}"></td>
                     <td th:text="${place.recEndDate}"></td>
-                    <td th:text="${place.status}"></td>
-                    <td>
-                        <button th:if="${place.status == '-'}" th:onclick="'javascript:confirm(' + ${place.id} + ');'">승인</button>
-                        <button th:if="${place.status == '-'}" th:onclick="'javascript:reject(' + ${place.id} + ');'">반려</button>
+                    <td th:text="${place.status}" th:id="'status'+${index.index}"></td>
+                    <td th:id="'btn'+${index.index}">
+                        <button th:if="${place.status == '-'}" th:onclick="'javascript:confirm(' + ${place.id} + ',' + ${index.index} + ');'">승인</button>
+                        <button th:if="${place.status == '-'}" th:onclick="'javascript:reject(' + ${place.id} + ',' + ${index.index} + ');'">반려</button>
                         <div th:if="${place.status == 'Y'}">승인됨</div>
                         <div th:if="${place.status == 'N'}">반려됨</div>
                     </td>
@@ -147,7 +147,7 @@
     </aside>
 </div>
 <script>
-    function confirm(id) {
+    function confirm(id, index) {
         $.ajax({
             url: "/manage/accept",
             async: true,
@@ -157,14 +157,15 @@
             method: "POST",
             contentType: "application/json"
         }).done(function(data) {
-            console.log(data);
+            $("#status" + index).text("Y");
+            $("#btn" + index).text("승인됨");
         }).fail(function(xhr, status, errorThrown) {
             console.log("오류명: " + errorThrown)
             console.log("상태: " + status);
         })
     }
 
-    function reject(id) {
+    function reject(id, index) {
         $.ajax({
             url: "/manage/reject",
             async: true,
@@ -174,7 +175,8 @@
             method: "POST",
             contentType: "application/json"
         }).done(function(data) {
-            console.log(data);
+            $("#status" + index).text("N");
+            $("#btn" + index).text("거절됨");
         }).fail(function(xhr, status, errorThrown) {
             console.log("오류명: " + errorThrown)
             console.log("상태: " + status);
