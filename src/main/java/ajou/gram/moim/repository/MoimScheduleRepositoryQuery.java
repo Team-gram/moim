@@ -31,6 +31,7 @@ public class MoimScheduleRepositoryQuery {
                         "inner join user on user.id = moim_member.user_id  " +
                         "where timestampdiff(minute, startTime, endTime) >= 30 " +
                         "and moim_id = ? " +
+                        "and user_regular_schedule.isPublish = 'Y' " +
                         "order by day, startTime";
 
         Connection conn = null;

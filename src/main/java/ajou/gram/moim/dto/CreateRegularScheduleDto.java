@@ -14,4 +14,5 @@ public class CreateRegularScheduleDto {
     private String endTime;
     private String title;
     private String detail;
+    private String isPublish;
 }
