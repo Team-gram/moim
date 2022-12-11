@@ -21,4 +21,5 @@ public class UserRegularSchedule {
     private LocalTime endTime;
     private String title;
     private String detail;
+    private String isPublish;
 }

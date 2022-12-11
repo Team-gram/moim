@@ -121,6 +121,7 @@ public class UserService {
         userRegularSchedule.setEndTime(endTime);
         userRegularSchedule.setTitle(createRegularScheduleDto.getTitle());
         userRegularSchedule.setDetail(createRegularScheduleDto.getDetail());
+        userRegularSchedule.setIsPublish(createRegularScheduleDto.getIsPublish());
         userRegularScheduleRepository.save(userRegularSchedule);
     }
 
@@ -138,6 +139,7 @@ public class UserService {
             m.setEndTime(endTime);
             if(m.getTitle() != null) m.setTitle(createRegularScheduleDto.getTitle());
             if(m.getDetail() != null) m.setDetail(createRegularScheduleDto.getDetail());
+            m.setIsPublish(createRegularScheduleDto.getIsPublish());
             userRegularScheduleRepository.save(m);
         });
     }

@@ -89,7 +89,8 @@ public class UserController {
             @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hh:mm]", example = "08:30"),
             @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hh:mm]", example = "12:00"),
             @Parameter(name = "title", description = "일정 이름(필수)", example = "공부"),
-            @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간")
+            @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간"),
+            @Parameter(name = "isPublish", description = "일정 공개 여부", example = "Y / N")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정기 일정 등록 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class))),
@@ -141,7 +142,8 @@ public class UserController {
             @Parameter(name = "startTime", description = "일정 시작 시간(필수) [hh:mm]", example = "08:30"),
             @Parameter(name = "endTime", description = "일정 종료 시간(필수) [hh:mm]", example = "12:00"),
             @Parameter(name = "title", description = "일정 이름(필수)", example = "공부"),
-            @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간")
+            @Parameter(name = "detail", description = "일정 설명", example = "시험 공부 하는 시간"),
+            @Parameter(name = "isPublish", description = "일정 공개 여부", example = "Y / N")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "개인 정기 일정 수정 성공", content = @Content(schema = @Schema(implementation = CreateRegularScheduleDto.class))),
