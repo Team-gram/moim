@@ -89,7 +89,7 @@ public class MoimUpperService {
         moimPlaceUpperRepository.save(moimPlaceUpper);
     }
 
-    public MoimPlaceUpper getUpperPlaceStatus(long userId) {
+    public List<MoimPlaceUpper> getUpperPlaceStatus(long userId) {
         return moimPlaceUpperRepository.findByUserId(userId);
     }
 
